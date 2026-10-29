@@ -100,6 +100,10 @@ struct _NautilusWindow
     GList *slots;
     NautilusWindowSlot *active_slot; /* weak reference */
 
+    /* Dual pane: second slot shown beside the tabs, not part of slots */
+    GtkPaned *dual_pane;
+    NautilusWindowSlot *secondary_slot;
+
     GtkWidget *split_view;
 
     /* Side Pane */
@@ -194,6 +198,13 @@ action_close_current_view (GSimpleAction *action,
 {
     NautilusWindow *window = user_data;
     AdwTabPage *page = get_current_page (window);
+
+    if (window->secondary_slot != NULL && window->active_slot == window->secondary_slot)
+    {
+        g_action_group_change_action_state (G_ACTION_GROUP (window), "toggle-dual-pane",
+                                            g_variant_new_boolean (FALSE));
+        return;
+    }
 
     if (adw_tab_view_get_n_pages (window->tab_view) <= 1)
     {
@@ -412,6 +423,34 @@ on_update_page_tooltip (NautilusWindowSlot *slot,
     adw_tab_page_set_tooltip (page, escaped_name);
 }
 
+static void
+on_slot_entered (NautilusWindowSlot *slot)
+{
+    /* Look the window up each time: tabs can move to other windows */
+    GtkRoot *root = gtk_widget_get_root (GTK_WIDGET (slot));
+
+    if (NAUTILUS_IS_WINDOW (root))
+    {
+        set_active_slot (NAUTILUS_WINDOW (root), slot);
+    }
+}
+
+static void
+track_slot_activation (NautilusWindowSlot *slot)
+{
+    /* In dual pane mode the pane the user clicks or tabs into becomes active */
+    GtkEventController *focus = gtk_event_controller_focus_new ();
+    GtkGesture *click = gtk_gesture_click_new ();
+
+    g_signal_connect_swapped (focus, "enter", G_CALLBACK (on_slot_entered), slot);
+    gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (click), 0);
+    gtk_event_controller_set_propagation_phase (GTK_EVENT_CONTROLLER (click), GTK_PHASE_CAPTURE);
+    g_signal_connect_swapped (click, "pressed", G_CALLBACK (on_slot_entered), slot);
+
+    gtk_widget_add_controller (GTK_WIDGET (slot), focus);
+    gtk_widget_add_controller (GTK_WIDGET (slot), GTK_EVENT_CONTROLLER (click));
+}
+
 static NautilusWindowSlot *
 nautilus_window_create_and_init_slot (NautilusWindow *window)
 {
@@ -421,6 +460,7 @@ nautilus_window_create_and_init_slot (NautilusWindow *window)
                               G_CALLBACK (update_cursor), window);
     g_signal_connect (slot, "notify::location",
                       G_CALLBACK (on_slot_location_changed), window);
+    track_slot_activation (slot);
 
     AdwTabPage *current = get_current_page (window);
     AdwTabPage *page = adw_tab_view_add_page (window->tab_view, GTK_WIDGET (slot), current);
@@ -541,6 +581,81 @@ nautilus_window_new_tab (NautilusWindow *window)
                                             NULL);
         g_object_unref (location);
     }
+}
+
+static void
+open_secondary_slot (NautilusWindow *window)
+{
+    g_autoptr (NautilusWindowSlot) slot = nautilus_window_slot_new (NAUTILUS_MODE_BROWSE);
+    GFile *active_location = window->active_slot != NULL
+                             ? nautilus_window_slot_get_location (window->active_slot)
+                             : NULL;
+    g_autoptr (GFile) location = NULL;
+
+    /* Same start folder as a new tab: the current one, or home for searches */
+    if (active_location == NULL || g_file_has_uri_scheme (active_location, SCHEME_SEARCH))
+    {
+        location = g_file_new_for_path (g_get_home_dir ());
+    }
+    else
+    {
+        location = g_object_ref (active_location);
+    }
+
+    g_signal_connect_swapped (slot, "notify::allow-stop",
+                              G_CALLBACK (update_cursor), window);
+    g_signal_connect (slot, "notify::location",
+                      G_CALLBACK (on_slot_location_changed), window);
+    track_slot_activation (slot);
+
+    window->secondary_slot = slot;
+    gtk_paned_set_end_child (window->dual_pane, GTK_WIDGET (slot));
+    gtk_paned_set_position (window->dual_pane,
+                            gtk_widget_get_width (GTK_WIDGET (window->dual_pane)) / 2);
+
+    nautilus_window_slot_open_location_full (slot, location, NULL);
+    set_active_slot (window, slot);
+}
+
+static void
+close_secondary_slot (NautilusWindow *window)
+{
+    NautilusWindowSlot *slot = window->secondary_slot;
+
+    if (slot == NULL)
+    {
+        return;
+    }
+
+    if (window->active_slot == slot)
+    {
+        AdwTabPage *page = adw_tab_view_get_selected_page (window->tab_view);
+
+        set_active_slot (window, NAUTILUS_WINDOW_SLOT (adw_tab_page_get_child (page)));
+    }
+
+    window->secondary_slot = NULL;
+    disconnect_slot (window, slot);
+    gtk_paned_set_end_child (window->dual_pane, NULL);
+}
+
+static void
+action_toggle_dual_pane (GSimpleAction *action,
+                         GVariant      *state,
+                         gpointer       user_data)
+{
+    NautilusWindow *window = user_data;
+
+    if (g_variant_get_boolean (state))
+    {
+        open_secondary_slot (window);
+    }
+    else
+    {
+        close_secondary_slot (window);
+    }
+
+    g_simple_action_set_state (action, state);
 }
 
 static void
@@ -1106,6 +1221,7 @@ const GActionEntry win_entries[] =
     { .name = "go-to-tab", .parameter_type = "i", .state = "0", .change_state = action_go_to_tab },
     { .name = "restore-tab", .activate = action_restore_tab },
     { .name = "toggle-sidebar", .activate = action_toggle_sidebar },
+    { .name = "toggle-dual-pane", .state = "false", .change_state = action_toggle_dual_pane },
 };
 
 static void
@@ -1135,6 +1251,7 @@ nautilus_window_initialize_actions (NautilusWindow *window)
     nautilus_application_set_accelerator (app, "win.current-location-menu", "F10");
     nautilus_application_set_accelerator (app, "win.restore-tab", "<shift><control>t");
     nautilus_application_set_accelerator (app, "win.toggle-sidebar", "F9");
+    nautilus_application_set_accelerator (app, "win.toggle-dual-pane", "F3");
 
     /* Alt+N for the first 9 tabs */
     for (i = 0; i < 9; ++i)
@@ -1264,6 +1381,12 @@ nautilus_window_dispose (GObject *object)
     /* the slots list should now be empty */
     g_warn_if_fail (window->slots == NULL);
 
+    if (window->secondary_slot != NULL)
+    {
+        disconnect_slot (window, window->secondary_slot);
+        window->secondary_slot = NULL;
+    }
+
     g_clear_weak_pointer (&window->active_slot);
 
     gtk_widget_dispose_template (GTK_WIDGET (window), NAUTILUS_TYPE_WINDOW);
@@ -1361,6 +1484,12 @@ set_active_slot (NautilusWindow     *window,
     {
         /* inform slot & view */
         nautilus_window_slot_set_active (old_slot, FALSE);
+
+        /* Dim the pane that is not active, so the user knows where the toolbar acts */
+        if (window->secondary_slot != NULL)
+        {
+            gtk_widget_set_opacity (GTK_WIDGET (old_slot), 0.7);
+        }
     }
 
     g_set_weak_pointer (&window->active_slot, new_slot);
@@ -1368,9 +1497,14 @@ set_active_slot (NautilusWindow     *window,
     /* make new slot active, if it exists */
     if (new_slot)
     {
-        AdwTabPage *page = adw_tab_view_get_page (window->tab_view,
-                                                  GTK_WIDGET (new_slot));
-        adw_tab_view_set_selected_page (window->tab_view, page);
+        if (new_slot != window->secondary_slot)
+        {
+            AdwTabPage *page = adw_tab_view_get_page (window->tab_view,
+                                                      GTK_WIDGET (new_slot));
+            adw_tab_view_set_selected_page (window->tab_view, page);
+        }
+
+        gtk_widget_set_opacity (GTK_WIDGET (new_slot), 1.0);
 
         /* inform slot & view */
         nautilus_window_slot_set_active (new_slot, TRUE);
@@ -1713,6 +1847,7 @@ nautilus_window_class_init (NautilusWindowClass *class)
     gtk_widget_class_bind_template_child (wclass, NautilusWindow, toast_overlay);
     gtk_widget_class_bind_template_child (wclass, NautilusWindow, tab_view);
     gtk_widget_class_bind_template_child (wclass, NautilusWindow, tab_bar);
+    gtk_widget_class_bind_template_child (wclass, NautilusWindow, dual_pane);
     gtk_widget_class_bind_template_child (wclass, NautilusWindow, network_address_bar);
 
     signals[LOCATIONS_CHANGED] =
