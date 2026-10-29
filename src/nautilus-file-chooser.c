@@ -776,11 +776,6 @@ nautilus_file_chooser_constructed (GObject *object)
                                  G_CONNECT_SWAPPED);
     }
 
-    if (g_strcmp0 (PROFILE, "") != 0)
-    {
-        gtk_widget_add_css_class (GTK_WIDGET (self), "devel");
-    }
-
     gtk_widget_add_css_class (self->title_widget, "windowtitle");
     gtk_widget_add_css_class (self->title_widget, "title");
     g_signal_connect (self->title_widget, "query-tooltip",

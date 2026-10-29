@@ -218,11 +218,6 @@ nautilus_application_create_window (NautilusApplication *self,
                                  MAX (NAUTILUS_WINDOW_MIN_WIDTH, default_width),
                                  MAX (NAUTILUS_WINDOW_MIN_HEIGHT, default_height));
 
-    if (g_strcmp0 (PROFILE, "") != 0)
-    {
-        gtk_widget_add_css_class (GTK_WIDGET (window), "devel");
-    }
-
     g_debug ("Creating a new navigation window");
 
     return window;
