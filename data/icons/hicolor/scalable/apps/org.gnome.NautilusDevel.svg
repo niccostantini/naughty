@@ -1,69 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
-  <!-- Camp parody of a certain smiling two-tone file manager: winking, heart-eyed, lipsticked, crowned -->
+  <!-- Camp parody of a certain smiling two-tone file manager, drawn as
+       gradient line art to match a neon outline icon theme -->
   <defs>
-    <linearGradient id="left" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ff7ac0"/>
-      <stop offset="1" stop-color="#ff2f8f"/>
+    <linearGradient id="neon" gradientUnits="userSpaceOnUse" x1="16" y1="8" x2="112" y2="118">
+      <stop offset="0" stop-color="#ff4fb1"/>
+      <stop offset="0.5" stop-color="#b84dff"/>
+      <stop offset="1" stop-color="#3fc8ff"/>
     </linearGradient>
-    <linearGradient id="right" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#d9a6ff"/>
-      <stop offset="1" stop-color="#9b4dff"/>
-    </linearGradient>
-    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#fff1a8"/>
-      <stop offset="1" stop-color="#ffbf1f"/>
-    </linearGradient>
-    <clipPath id="face">
-      <rect x="10" y="10" width="108" height="106" rx="26"/>
-    </clipPath>
   </defs>
 
-  <!-- body with Adwaita-style bottom edge -->
-  <rect x="10" y="16" width="108" height="106" rx="26" fill="#5a1a9e"/>
-  <g clip-path="url(#face)">
-    <rect x="10" y="10" width="108" height="106" fill="url(#left)"/>
-    <!-- wavy split, because a straight profile would be far too subtle -->
-    <path d="M68 10 C58 30 76 46 64 64 C52 82 74 98 64 116 L118 116 L118 10 Z" fill="url(#right)"/>
-    <path d="M68 10 C58 30 76 46 64 64 C52 82 74 98 64 116" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="2"/>
-    <!-- glitter -->
-    <g fill="#ffffff">
-      <circle cx="24" cy="78" r="1.4" opacity="0.8"/>
-      <circle cx="30" cy="96" r="1" opacity="0.7"/>
-      <circle cx="40" cy="104" r="1.3" opacity="0.6"/>
-      <circle cx="18" cy="60" r="1" opacity="0.7"/>
-      <circle cx="104" cy="70" r="1.2" opacity="0.6"/>
-      <circle cx="98" cy="40" r="1" opacity="0.7"/>
-    </g>
+  <g fill="none" stroke="url(#neon)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <!-- face outline, open at the top for the tiara -->
+    <path d="M46 22 H40 A24 24 0 0 0 16 46 V92 A24 24 0 0 0 40 116 H88 A24 24 0 0 0 112 92 V46 A24 24 0 0 0 88 22 H82"/>
+    <!-- tiara -->
+    <path d="M46 22 L50 8 L57 16 L64 5 L71 16 L78 8 L82 22"/>
+    <!-- wavy split -->
+    <path d="M66 32 C58 46 74 58 64 74"/>
+    <!-- wink with lashes -->
+    <path d="M30 58 Q40 66 50 58"/>
+    <path d="M33 63 L30 68 M40 65 L40 71 M47 63 L50 68" stroke-width="5"/>
+    <!-- heart eye -->
+    <path d="M88 68 C76 60 78 48 88 54 C98 48 100 60 88 68 Z"/>
+    <!-- lipstick smile -->
+    <path d="M38 84 Q64 106 90 84 Q64 93 38 84 Z"/>
+    <!-- sparkle -->
+    <path d="M27 88 Q27 95 34 95 Q27 95 27 102 Q27 95 20 95 Q27 95 27 88 Z" stroke-width="4"/>
   </g>
-
-  <!-- left eye: blue eyeshadow, wink, dramatic lashes -->
-  <path d="M31 50 Q43 38 55 50" fill="none" stroke="#38d6ff" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
-  <path d="M33 54 Q43 63 53 54" fill="none" stroke="#2b0a3d" stroke-width="4" stroke-linecap="round"/>
-  <g stroke="#2b0a3d" stroke-width="3" stroke-linecap="round">
-    <path d="M35 57 L30 63"/>
-    <path d="M43 59.5 L43 66"/>
-    <path d="M51 57 L56 63"/>
-  </g>
-
-  <!-- right eye: heart -->
-  <path d="M86 64 C70 53 74 39 86 46 C98 39 102 53 86 64 Z" fill="#ff1f5a" stroke="#2b0a3d" stroke-width="2.5" stroke-linejoin="round"/>
-  <ellipse cx="81" cy="49" rx="2.6" ry="1.8" fill="#ffffff" opacity="0.85"/>
-
-  <!-- lipstick smile and beauty mark -->
-  <path d="M36 80 Q64 108 92 80 Q64 94 36 80 Z" fill="#d4003f" stroke="#2b0a3d" stroke-width="2.5" stroke-linejoin="round"/>
-  <path d="M46 88 Q56 92 62 91" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-  <circle cx="98" cy="90" r="2.4" fill="#2b0a3d"/>
-
-  <!-- tiara -->
-  <path d="M46 16 L50 3 L57 11 L64 0 L71 11 L78 3 L82 16 Z" fill="url(#gold)" stroke="#a0640a" stroke-width="1.6" stroke-linejoin="round"/>
-  <circle cx="64" cy="10" r="2.4" fill="#ff1f5a"/>
-  <circle cx="54" cy="13" r="1.6" fill="#38d6ff"/>
-  <circle cx="74" cy="13" r="1.6" fill="#38d6ff"/>
-
-  <!-- sparkles -->
-  <g fill="url(#gold)" stroke="#a0640a" stroke-width="0.8" stroke-linejoin="round">
-    <path d="M22 22 Q22 30 30 30 Q22 30 22 38 Q22 30 14 30 Q22 30 22 22 Z"/>
-    <path d="M108 96 Q108 103 115 103 Q108 103 108 110 Q108 103 101 103 Q108 103 108 96 Z"/>
-    <path d="M106 18 Q106 23 111 23 Q106 23 106 28 Q106 23 101 23 Q106 23 106 18 Z"/>
-  </g>
+  <!-- beauty mark -->
+  <circle cx="100" cy="96" r="4" fill="url(#neon)"/>
 </svg>
