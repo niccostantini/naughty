@@ -5571,8 +5571,8 @@ msgid "_Help"
 msgstr "A_iuto"
 
 #: src/resources/ui/nautilus-window.blp:52
-msgid "_About Files"
-msgstr "I_nformazioni su File"
+msgid "_About Naughty"
+msgstr "I_nformazioni su Naughty"
 
 #: src/resources/ui/nautilus-window.blp:61
 msgid "_New Tab"
@@ -6571,3 +6571,6 @@ msgstr "Esce"
 
 #~ msgid "Computer"
 #~ msgstr "Computer"
+
+msgid "_Split View"
+msgstr "_Vista divisa"

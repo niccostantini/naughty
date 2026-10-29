@@ -578,7 +578,7 @@ handle_file_chooser_methods (XdpImplFileChooser    *object,
     nautilus_file_chooser_add_choices (window, data->choices_action_group, G_MENU_MODEL (menu));
 
     const char *title;
-    title = (arg_title[0] == '\0') ? _("Files") : arg_title;
+    title = (arg_title[0] == '\0') ? "Naughty" : arg_title;
     gtk_window_set_title (GTK_WINDOW (window), title);
 
     g_signal_connect_swapped (window, "close-request",
