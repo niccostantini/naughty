@@ -151,7 +151,8 @@ if get_option('profile') == 'Devel'
   name_suffix = ' (Development Snapshot)'
 endif
 
-application_id = 'org.gnome.Nautilus' + app_id_suffix
+# Naughty uses its own ID so it never claims GNOME's org.gnome namespace.
+application_id = 'io.github.niccostantini.Naughty' + app_id_suffix
 
 if profile == ''
   # Example: 40.0

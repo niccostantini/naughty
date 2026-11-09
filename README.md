@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="data/icons/hicolor/scalable/apps/org.gnome.NautilusDevel.svg" alt="Naughty icon: a winking neon face with a tiara and a heart eye" width="128">
+  <img src="data/icons/hicolor/scalable/apps/io.github.niccostantini.Naughty.svg" alt="Naughty icon: a winking neon face with a tiara and a heart eye" width="128">
 </p>
 
 <h1 align="center">Naughty</h1>
@@ -69,7 +69,7 @@ sudo apt install meson ninja-build git blueprint-compiler libgtk-4-dev libadwait
 ```bash
 git clone https://github.com/niccostantini/naughty.git
 cd naughty
-meson setup build -Dprofile=Devel -Dextensions=false -Dselinux=disabled -Dtests=none --prefix="$HOME/.local/opt/naughty"
+meson setup build -Dextensions=false -Dselinux=disabled -Dtests=none --prefix="$HOME/.local/opt/naughty"
 meson install -C build
 ```
 
@@ -93,8 +93,8 @@ exec "$P/bin/nautilus" "\$@"
 EOF
 chmod +x "$P/bin/naughty"
 mkdir -p ~/.local/share/applications ~/.local/share/icons/hicolor/scalable/apps ~/.local/share/dbus-1/services
-sed -e "s|^Exec=nautilus|Exec=$P/bin/naughty|" -e "s|^DBusActivatable=true|DBusActivatable=false|" "$P/share/applications/org.gnome.Nautilus.Devel.desktop" > ~/.local/share/applications/org.gnome.Nautilus.Devel.desktop
-ln -sf "$P/share/icons/hicolor/scalable/apps/org.gnome.Nautilus.Devel.svg" ~/.local/share/icons/hicolor/scalable/apps/
+sed -e "s|^Exec=nautilus|Exec=$P/bin/naughty|" -e "s|^DBusActivatable=true|DBusActivatable=false|" "$P/share/applications/io.github.niccostantini.Naughty.desktop" > ~/.local/share/applications/io.github.niccostantini.Naughty.desktop
+ln -sf "$P/share/icons/hicolor/scalable/apps/io.github.niccostantini.Naughty.svg" ~/.local/share/icons/hicolor/scalable/apps/
 ln -sf "$P/share/dbus-1/services/org.gnome.NautilusPreviewer.service" ~/.local/share/dbus-1/services/
 ```
 
@@ -103,7 +103,7 @@ Naughty now appears in your app grid. Open it, select a PDF and press **Space**.
 **5. Optional: make Naughty open your folders.**
 
 ```bash
-xdg-mime default org.gnome.Nautilus.Devel.desktop inode/directory
+xdg-mime default io.github.niccostantini.Naughty.desktop inode/directory
 ```
 
 ### Office previews
@@ -121,23 +121,22 @@ PDF previews work without either one.
 ```bash
 xdg-mime default org.gnome.Nautilus.desktop inode/directory
 rm -rf ~/.local/opt/naughty
-rm -f ~/.local/share/applications/org.gnome.Nautilus.Devel.desktop ~/.local/share/icons/hicolor/scalable/apps/org.gnome.Nautilus.Devel.svg ~/.local/share/dbus-1/services/org.gnome.NautilusPreviewer.service
+rm -f ~/.local/share/applications/io.github.niccostantini.Naughty.desktop ~/.local/share/icons/hicolor/scalable/apps/io.github.niccostantini.Naughty.svg ~/.local/share/dbus-1/services/org.gnome.NautilusPreviewer.service
 ```
 
 Your system Files app was never changed, so it works as before.
 
 ## Known limits
 
-- **Shared settings.** Naughty and the system Files read the same preferences
-  (`org.gnome.nautilus`). A change in one appears in the other.
 - **No extensions.** Nautilus extensions (for example `nautilus-python` scripts or cloud-sync
   emblems) do not load. They are off in the build because Ubuntu 26.04 lacks `gexiv2` 0.16.
 - **Shared previewer.** After step 4, the system Files app also uses Naughty's previewer.
   The uninstall steps undo this.
 - **Previews of remote files make a copy.** Files from ZIP archives and network shares are
   copied to `~/.cache/sushi` before the preview. That folder is not emptied automatically.
-- **Internal name.** The app still uses the ID `org.gnome.Nautilus.Devel`. A Naughty-specific
-  ID is planned.
+- **Fresh settings.** Naughty keeps its own preferences, apart from the system Files. To start
+  from your current Files settings, run this once:
+  `dconf dump /org/gnome/nautilus/ | dconf load /io/github/niccostantini/Naughty/`
 
 ## Roadmap
 

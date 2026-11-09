@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <!-- Camp parody of a certain smiling two-tone file manager, drawn as
+       gradient line art to match a neon outline icon theme -->
+  <defs>
+    <linearGradient id="neon" gradientUnits="userSpaceOnUse" x1="16" y1="8" x2="112" y2="118">
+      <stop offset="0" stop-color="#ff4fb1"/>
+      <stop offset="0.5" stop-color="#b84dff"/>
+      <stop offset="1" stop-color="#3fc8ff"/>
+    </linearGradient>
+  </defs>
+
+  <g fill="none" stroke="url(#neon)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <!-- face outline, open at the top for the tiara -->
+    <path d="M46 22 H40 A24 24 0 0 0 16 46 V92 A24 24 0 0 0 40 116 H88 A24 24 0 0 0 112 92 V46 A24 24 0 0 0 88 22 H82"/>
+    <!-- tiara -->
+    <path d="M46 22 L50 8 L57 16 L64 5 L71 16 L78 8 L82 22"/>
+    <!-- wavy split -->
+    <path d="M66 32 C58 46 74 58 64 74"/>
+    <!-- wink with lashes -->
+    <path d="M30 58 Q40 66 50 58"/>
+    <path d="M33 63 L30 68 M40 65 L40 71 M47 63 L50 68" stroke-width="5"/>
+    <!-- heart eye -->
+    <path d="M88 68 C76 60 78 48 88 54 C98 48 100 60 88 68 Z"/>
+    <!-- lipstick smile -->
+    <path d="M38 84 Q64 106 90 84 Q64 93 38 84 Z"/>
+    <!-- sparkle -->
+    <path d="M27 88 Q27 95 34 95 Q27 95 27 102 Q27 95 20 95 Q27 95 27 88 Z" stroke-width="4"/>
+  </g>
+  <!-- beauty mark -->
+  <circle cx="100" cy="96" r="4" fill="url(#neon)"/>
+</svg>

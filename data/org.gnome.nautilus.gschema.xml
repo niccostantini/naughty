@@ -68,15 +68,15 @@
     <value value="3" nick="encrypted_zip"/>
   </enum>
 
-  <schema path="/org/gnome/nautilus/" id="org.gnome.nautilus" gettext-domain="nautilus">
-    <child schema="org.gnome.nautilus.preferences" name="preferences"/>
-    <child schema="org.gnome.nautilus.compression" name="compression"/>
-    <child schema="org.gnome.nautilus.icon-view" name="icon-view"/>
-    <child schema="org.gnome.nautilus.list-view" name="list-view"/>
-    <child schema="org.gnome.nautilus.window-state" name="window-state"/>
+  <schema path="/io/github/niccostantini/Naughty/" id="io.github.niccostantini.Naughty" gettext-domain="nautilus">
+    <child schema="io.github.niccostantini.Naughty.preferences" name="preferences"/>
+    <child schema="io.github.niccostantini.Naughty.compression" name="compression"/>
+    <child schema="io.github.niccostantini.Naughty.icon-view" name="icon-view"/>
+    <child schema="io.github.niccostantini.Naughty.list-view" name="list-view"/>
+    <child schema="io.github.niccostantini.Naughty.window-state" name="window-state"/>
   </schema>
 
-  <schema path="/org/gnome/nautilus/preferences/" id="org.gnome.nautilus.preferences" gettext-domain="nautilus">
+  <schema path="/io/github/niccostantini/Naughty/preferences/" id="io.github.niccostantini.Naughty.preferences" gettext-domain="nautilus">
     <key type="b" name="always-use-location-entry">
       <default>false</default>
       <summary>Always use the location entry, instead of the pathbar</summary>
@@ -190,7 +190,7 @@
     </key>
   </schema>
 
-  <schema path="/org/gnome/nautilus/compression/" id="org.gnome.nautilus.compression" gettext-domain="nautilus">
+  <schema path="/io/github/niccostantini/Naughty/compression/" id="io.github.niccostantini.Naughty.compression" gettext-domain="nautilus">
     <key name="default-compression-format" enum="org.gnome.nautilus.CompressionFormat">
       <default>'zip'</default>
       <summary>Default format for compressing files</summary>
@@ -198,7 +198,7 @@
     </key>
   </schema>
 
-  <schema path="/org/gnome/nautilus/icon-view/" id="org.gnome.nautilus.icon-view" gettext-domain="nautilus">
+  <schema path="/io/github/niccostantini/Naughty/icon-view/" id="io.github.niccostantini.Naughty.icon-view" gettext-domain="nautilus">
     <key type="as" name="captions">
       <default>[ 'none', 'none', 'none' ]</default>
       <summary>List of possible captions on icons</summary>
@@ -215,7 +215,7 @@
     </key>
   </schema>
 
-  <schema path="/org/gnome/nautilus/list-view/" id="org.gnome.nautilus.list-view" gettext-domain="nautilus">
+  <schema path="/io/github/niccostantini/Naughty/list-view/" id="io.github.niccostantini.Naughty.list-view" gettext-domain="nautilus">
     <key name="default-zoom-level" enum="org.gnome.nautilus.ListZoomLevel">
       <aliases>
         <alias value='standard' target='medium'/>
@@ -239,7 +239,7 @@
     </key>
   </schema>
 
-  <schema path="/org/gnome/nautilus/window-state/" id="org.gnome.nautilus.window-state" gettext-domain="nautilus">
+  <schema path="/io/github/niccostantini/Naughty/window-state/" id="io.github.niccostantini.Naughty.window-state" gettext-domain="nautilus">
     <key type="(ii)" name="initial-size">
       <default>(890, 550)</default>
       <summary>Initial size of the window</summary>
