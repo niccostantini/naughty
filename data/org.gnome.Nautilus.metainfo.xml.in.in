@@ -6,6 +6,10 @@
   <summary>Access and organize files</summary>
   <description>
     <p>
+      Naughty is an unofficial fork of GNOME Files (Nautilus) that adds a split view
+      and spacebar previews of PDF and Office files. It is not made or endorsed by GNOME.
+    </p>
+    <p>
       Files, also known as Nautilus, is the default file manager of the GNOME desktop.
       It provides a  simple and integrated way of managing your files and browsing your file system.
     </p>
@@ -17,14 +21,10 @@
       Its functions can be extended with plugins and scripts.
     </p>
   </description>
-  <url type="bugtracker">https://gitlab.gnome.org/GNOME/nautilus/issues</url>
-  <url type="contact">https://discourse.gnome.org/tag/nautilus</url>
-  <url type="contribute">https://welcome.gnome.org/app/Nautilus/</url>
-  <url type="donation">https://www.gnome.org/donate/</url>
+  <url type="bugtracker">https://github.com/niccostantini/naughty/issues</url>
   <url type="help">https://help.gnome.org/users/gnome-help/stable/files.html.en</url>
-  <url type="homepage">https://apps.gnome.org/Nautilus/</url>
-  <url type="translate">https://l10n.gnome.org/module/nautilus/</url>
-  <url type="vcs-browser">https://gitlab.gnome.org/GNOME/nautilus</url>
+  <url type="homepage">https://github.com/niccostantini/naughty</url>
+  <url type="vcs-browser">https://github.com/niccostantini/naughty</url>
   <launchable type="desktop-id">@appid@.desktop</launchable>
   <releases>
     <release version="@release-version@" type="snapshot"/>
@@ -44,10 +44,9 @@
     <release version="49.1" type="stable" date="2025-10-13"/>
     <release version="49.0" type="stable" date="2025-09-15"/>
   </releases>
-  <project_group>GNOME</project_group>
   <project_license>GPL-3.0-or-later</project_license>
-  <developer id="org.gnome">
-    <name>The GNOME Project</name>
+  <developer id="io.github.niccostantini">
+    <name>Niccolò Costantini, based on the work of the GNOME Project</name>
   </developer>
   <provides>
     <binary>nautilus</binary>
