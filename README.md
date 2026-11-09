@@ -1,3 +1,19 @@
+# Naughty
+
+Naughty is a personal fork of [GNOME Files (Nautilus)](https://gitlab.gnome.org/GNOME/nautilus),
+based on the `gnome-50` stable branch. It adds a split view (F3) and pairs with
+[naughty-sushi](https://github.com/niccostantini/naughty-sushi), a fork of GNOME Sushi,
+for spacebar previews of PDF and Office files.
+
+Naughty is not affiliated with or endorsed by the GNOME Foundation. "GNOME" and
+"Nautilus" are names of their respective owners. The code keeps its upstream
+license, GPL-3.0-or-later (see `LICENSE`), and the original copyright notices.
+All changes are in the commits on top of upstream.
+
+The original upstream README follows.
+
+---
+
 # nautilus
 [![Pipeline status](https://gitlab.gnome.org/GNOME/nautilus/badges/main/pipeline.svg)](https://gitlab.gnome.org/GNOME/nautilus/commits/main)
 [![coverage report](https://gitlab.gnome.org/GNOME/nautilus/badges/main/coverage.svg)](https://gitlab.gnome.org/GNOME/nautilus/commits/main) 
