@@ -19,6 +19,10 @@ It keeps everything you know from Nautilus. It adds the features people miss aft
 Finder or Windows Explorer. It installs beside your system file manager, so you can try it
 and remove it without touching the system.
 
+<p align="center">
+  <img src="docs/screenshots/split-view.png" alt="Naughty in split view: a project folder on the left, a folder of images on the right" width="800">
+</p>
+
 ## What it adds
 
 - **Split view.** Press **F3** to open a second pane next to the current one. You can drag
@@ -27,6 +31,10 @@ and remove it without touching the system.
 - **Spacebar preview for documents.** Select a file and press **Space**. PDFs open in a
   scrollable viewer with page buttons. Word, Excel and PowerPoint files (`.docx`, `.xlsx`,
   `.pptx`, also ODF) get a full preview too.
+<p align="center">
+  <img src="docs/screenshots/pdf-preview.png" alt="Spacebar preview of a three-page PDF, with page buttons showing 1 of 3" width="800">
+</p>
+
 - **Preview everywhere.** The preview also works for files in the Trash, inside ZIP archives,
   on network shares (SMB, SFTP) and on the Ubuntu desktop.
 - **Its own face.** A neon icon and its own name, so you never mix it up with the system Files.
