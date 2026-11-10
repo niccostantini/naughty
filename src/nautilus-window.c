@@ -59,6 +59,7 @@
 #include "nautilus-network-address-bar.h"
 #include "nautilus-mime-actions.h"
 #include "nautilus-module.h"
+#include "nautilus-preview-pane.h"
 #include "nautilus-progress-indicator.h"
 #include "nautilus-scheme.h"
 #include "nautilus-shortcut-manager.h"
@@ -102,6 +103,7 @@ struct _NautilusWindow
 
     /* Dual pane: second slot shown beside the tabs, not part of slots */
     GtkPaned *dual_pane;
+    GtkWidget *preview_pane;
     NautilusWindowSlot *secondary_slot;
 
     GtkWidget *split_view;
@@ -1237,6 +1239,12 @@ nautilus_window_initialize_actions (NautilusWindow *window)
                                      win_entries, G_N_ELEMENTS (win_entries),
                                      window);
 
+    /* The preview pane remembers whether it is shown */
+    g_autoptr (GAction) preview_action = g_settings_create_action (nautilus_window_state, "show-preview-pane");
+    g_action_map_add_action (G_ACTION_MAP (window), preview_action);
+    g_settings_bind (nautilus_window_state, "show-preview-pane",
+                     window->preview_pane, "visible", G_SETTINGS_BIND_GET);
+
 #define ACCELS(...) ((const char *[]) { __VA_ARGS__, NULL })
 
     app = g_application_get_default ();
@@ -1252,6 +1260,7 @@ nautilus_window_initialize_actions (NautilusWindow *window)
     nautilus_application_set_accelerator (app, "win.restore-tab", "<shift><control>t");
     nautilus_application_set_accelerator (app, "win.toggle-sidebar", "F9");
     nautilus_application_set_accelerator (app, "win.toggle-dual-pane", "F3");
+    nautilus_application_set_accelerator (app, "win.show-preview-pane", "<alt>p");
 
     /* Alt+N for the first 9 tabs */
     for (i = 0; i < 9; ++i)
@@ -1720,6 +1729,7 @@ nautilus_window_init (NautilusWindow *window)
     g_type_ensure (NAUTILUS_TYPE_NETWORK_ADDRESS_BAR);
     g_type_ensure (NAUTILUS_TYPE_TOOLBAR);
     g_type_ensure (NAUTILUS_TYPE_PLACES_SIDEBAR);
+    g_type_ensure (NAUTILUS_TYPE_PREVIEW_PANE);
     g_type_ensure (NAUTILUS_TYPE_PROGRESS_INDICATOR);
     g_type_ensure (NAUTILUS_TYPE_SHORTCUT_MANAGER);
     gtk_widget_init_template (GTK_WIDGET (window));
@@ -1848,6 +1858,7 @@ nautilus_window_class_init (NautilusWindowClass *class)
     gtk_widget_class_bind_template_child (wclass, NautilusWindow, tab_view);
     gtk_widget_class_bind_template_child (wclass, NautilusWindow, tab_bar);
     gtk_widget_class_bind_template_child (wclass, NautilusWindow, dual_pane);
+    gtk_widget_class_bind_template_child (wclass, NautilusWindow, preview_pane);
     gtk_widget_class_bind_template_child (wclass, NautilusWindow, network_address_bar);
 
     signals[LOCATIONS_CHANGED] =

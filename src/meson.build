@@ -184,6 +184,8 @@ libnautilus_sources = [
   'nautilus-progress-indicator.h',
   'nautilus-progress-info-manager.c',
   'nautilus-progress-info-manager.h',
+  'nautilus-preview-pane.c',
+  'nautilus-preview-pane.h',
   'nautilus-progress-info-widget.c',
   'nautilus-progress-info-widget.h',
   'nautilus-progress-info.c',

@@ -6606,3 +6606,22 @@ msgstr "Pausa"
 #: src/nautilus-progress-info-widget.c
 msgid "Resume"
 msgstr "Riprendi"
+
+#: src/resources/ui/nautilus-window.blp
+msgid "_Preview Pane"
+msgstr "_Pannello anteprima"
+
+#: src/nautilus-preview-pane.c
+msgid "Preview Pane"
+msgstr "Pannello anteprima"
+
+#: src/nautilus-preview-pane.c
+msgid "No Item Selected"
+msgstr "Nessun elemento selezionato"
+
+#: src/nautilus-preview-pane.c
+#, c-format
+msgid "%u Item Selected"
+msgid_plural "%u Items Selected"
+msgstr[0] "%u elemento selezionato"
+msgstr[1] "%u elementi selezionati"

@@ -255,6 +255,11 @@
       <summary>Initial size of the window</summary>
       <description>A tuple containing the initial width and height of the app window.</description>
     </key>
+    <key type="b" name="show-preview-pane">
+      <default>false</default>
+      <summary>Show the preview pane</summary>
+      <description>Whether windows show a pane with a preview and details of the selected file.</description>
+    </key>
     <key type="b" name="maximized">
       <default>false</default>
       <summary>Whether the navigation window should be maximized</summary>

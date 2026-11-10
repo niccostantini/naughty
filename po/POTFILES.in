@@ -56,6 +56,7 @@ src/nautilus-portal.c
 src/nautilus-preferences-dialog.c
 src/nautilus-program-choosing.c
 src/nautilus-progress-info.c
+src/nautilus-preview-pane.c
 src/nautilus-progress-info-widget.c
 src/nautilus-progress-persistence-handler.c
 src/nautilus-properties.c

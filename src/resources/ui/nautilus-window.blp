@@ -19,6 +19,11 @@ menu app_menu {
       label: _("_Split View");
       action: "win.toggle-dual-pane";
     }
+
+    item {
+      label: _("_Preview Pane");
+      action: "win.show-preview-pane";
+    }
   }
 
   section undo_redo_section {
@@ -171,22 +176,34 @@ template $NautilusWindow: Adw.ApplicationWindow {
             window-slot: bind template.active-slot;
           }
 
-          content: Paned dual_pane {
-            shrink-start-child: false;
-            shrink-end-child: false;
+          content: Box {
+            Paned dual_pane {
+              hexpand: true;
 
-            start-child: Box {
-              orientation: vertical;
+              shrink-start-child: false;
+              shrink-end-child: false;
 
-              Adw.TabBar tab_bar {
-                view: tab_view;
-              }
+              start-child: Box {
+                orientation: vertical;
 
-              Adw.TabView tab_view {
-                vexpand: true;
-                menu-model: tab_menu_model;
-              }
-            };
+                Adw.TabBar tab_bar {
+                  view: tab_view;
+                }
+
+                Adw.TabView tab_view {
+                  vexpand: true;
+                  menu-model: tab_menu_model;
+                }
+              };
+            }
+
+            Separator {
+              visible: bind preview_pane.visible;
+            }
+
+            $NautilusPreviewPane preview_pane {
+              window-slot: bind template.active-slot;
+            }
           };
 
           [bottom]
