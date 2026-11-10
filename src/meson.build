@@ -288,6 +288,8 @@ nautilus_deps = [
   libportal,
   libportal_gtk4,
   nautilus_extension,
+  papers_document,
+  papers_view,
   selinux,
   tinysparql,
   xdp_gnome,

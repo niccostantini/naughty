@@ -38,8 +38,10 @@ and remove it without touching the system.
 - **Jump to files while typing.** Type the first letters of a name and Naughty selects the
   file, as in Finder and Windows Explorer. Nautilus starts a search instead. **Ctrl+F** still
   searches, and a switch in Preferences restores the old behaviour.
-- **Preview pane.** Press **Alt+P** for a pane with a large thumbnail and the details of the
-  selected file. It stays open until you close it.
+- **Preview pane.** Press **Alt+P** for a pane beside the files that shows the selected file:
+  PDFs and Office documents page by page, text files as text, images in full quality, and a
+  thumbnail for everything else, with name, type, size and date. Drag its edge to resize it;
+  it keeps its width and stays open until you close it.
 - **Copy queue with pause.** Copies run one after another instead of all at once, so they do not
   slow each other down. Each copy has a **Pause** button in the operations list. A switch in
   Preferences turns the queue off.
@@ -140,6 +142,11 @@ Your system Files app was never changed, so it works as before.
   emblems) do not load. They are off in the build because Ubuntu 26.04 lacks `gexiv2` 0.16.
 - **Shared previewer.** After step 4, the system Files app also uses Naughty's previewer.
   The uninstall steps undo this.
+- **Preview pane on local files only.** Files in the Trash, in archives or on network shares
+  show a thumbnail in the pane; the spacebar preview still shows them in full. Audio and video
+  show a thumbnail too. Converted Office documents are kept in `~/.cache/naughty/previews`.
+- **Papers updates.** The preview pane uses Papers' C library, which has no stable API. If
+  previews break after a Papers update, rebuild Naughty.
 - **Previews of remote files make a copy.** Files from ZIP archives and network shares are
   copied to `~/.cache/sushi` before the preview. That folder is not emptied automatically.
 - **Fresh settings.** Naughty keeps its own preferences, apart from the system Files. To start

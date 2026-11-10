@@ -176,8 +176,12 @@ template $NautilusWindow: Adw.ApplicationWindow {
             window-slot: bind template.active-slot;
           }
 
-          content: Box {
-            Paned dual_pane {
+          content: Paned preview_paned {
+            resize-end-child: false;
+            shrink-start-child: false;
+            shrink-end-child: false;
+
+            start-child: Paned dual_pane {
               hexpand: true;
 
               shrink-start-child: false;
@@ -195,15 +199,11 @@ template $NautilusWindow: Adw.ApplicationWindow {
                   menu-model: tab_menu_model;
                 }
               };
-            }
+            };
 
-            Separator {
-              visible: bind preview_pane.visible;
-            }
-
-            $NautilusPreviewPane preview_pane {
+            end-child: $NautilusPreviewPane preview_pane {
               window-slot: bind template.active-slot;
-            }
+            };
           };
 
           [bottom]

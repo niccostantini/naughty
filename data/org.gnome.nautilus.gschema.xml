@@ -255,6 +255,11 @@
       <summary>Initial size of the window</summary>
       <description>A tuple containing the initial width and height of the app window.</description>
     </key>
+    <key type="i" name="preview-pane-width">
+      <default>320</default>
+      <summary>Width of the preview pane</summary>
+      <description>The width of the preview pane in pixels, as the user last left it.</description>
+    </key>
     <key type="b" name="show-preview-pane">
       <default>false</default>
       <summary>Show the preview pane</summary>

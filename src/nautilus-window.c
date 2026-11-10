@@ -104,6 +104,9 @@ struct _NautilusWindow
     /* Dual pane: second slot shown beside the tabs, not part of slots */
     GtkPaned *dual_pane;
     GtkWidget *preview_pane;
+    GtkPaned *preview_paned;
+    int preview_width;
+    gboolean placing_preview;
     NautilusWindowSlot *secondary_slot;
 
     GtkWidget *split_view;
@@ -1207,6 +1210,10 @@ extra_drag_drop_cb (AdwTabBar    *self,
     return nautilus_dnd_perform_drop (view, value, action, target_location);
 }
 
+static void on_preview_pane_visible (NautilusWindow *window);
+static void place_preview_divider (NautilusWindow *window);
+static void on_preview_divider_moved (NautilusWindow *window);
+
 const GActionEntry win_entries[] =
 {
     { .name = "current-location-menu", .activate = action_show_current_location_menu },
@@ -1244,6 +1251,13 @@ nautilus_window_initialize_actions (NautilusWindow *window)
     g_action_map_add_action (G_ACTION_MAP (window), preview_action);
     g_settings_bind (nautilus_window_state, "show-preview-pane",
                      window->preview_pane, "visible", G_SETTINGS_BIND_GET);
+    g_signal_connect_object (window->preview_pane, "notify::visible",
+                             G_CALLBACK (on_preview_pane_visible), window, G_CONNECT_SWAPPED);
+    window->preview_width = g_settings_get_int (nautilus_window_state, "preview-pane-width");
+    g_signal_connect_object (window->preview_paned, "notify::max-position",
+                             G_CALLBACK (place_preview_divider), window, G_CONNECT_SWAPPED);
+    g_signal_connect_object (window->preview_paned, "notify::position",
+                             G_CALLBACK (on_preview_divider_moved), window, G_CONNECT_SWAPPED);
 
 #define ACCELS(...) ((const char *[]) { __VA_ARGS__, NULL })
 
@@ -1431,12 +1445,49 @@ nautilus_window_finalize (GObject *object)
     G_OBJECT_CLASS (nautilus_window_parent_class)->finalize (object);
 }
 
+/* The preview pane keeps the width the user dragged it to, also when
+ * the window is resized */
+static void
+place_preview_divider (NautilusWindow *window)
+{
+    int total = gtk_widget_get_width (GTK_WIDGET (window->preview_paned));
+
+    if (!gtk_widget_get_visible (window->preview_pane) || total <= 0)
+    {
+        return;
+    }
+
+    window->placing_preview = TRUE;
+    gtk_paned_set_position (window->preview_paned, MAX (total - window->preview_width, 0));
+    window->placing_preview = FALSE;
+}
+
+static void
+on_preview_divider_moved (NautilusWindow *window)
+{
+    if (window->placing_preview || !gtk_widget_get_visible (window->preview_pane) ||
+        !gtk_widget_get_mapped (window->preview_pane))
+    {
+        return;
+    }
+
+    window->preview_width = gtk_widget_get_width (window->preview_pane);
+}
+
+static void
+on_preview_pane_visible (NautilusWindow *window)
+{
+    place_preview_divider (window);
+}
+
 static void
 nautilus_window_save_geometry (NautilusWindow *window)
 {
     gint width;
     gint height;
     GVariant *initial_size;
+
+    g_settings_set_int (nautilus_window_state, "preview-pane-width", window->preview_width);
 
     gtk_window_get_default_size (GTK_WINDOW (window), &width, &height);
     initial_size = g_variant_new_parsed ("(%i, %i)", width, height);
@@ -1859,6 +1910,7 @@ nautilus_window_class_init (NautilusWindowClass *class)
     gtk_widget_class_bind_template_child (wclass, NautilusWindow, tab_bar);
     gtk_widget_class_bind_template_child (wclass, NautilusWindow, dual_pane);
     gtk_widget_class_bind_template_child (wclass, NautilusWindow, preview_pane);
+    gtk_widget_class_bind_template_child (wclass, NautilusWindow, preview_paned);
     gtk_widget_class_bind_template_child (wclass, NautilusWindow, network_address_bar);
 
     signals[LOCATIONS_CHANGED] =
