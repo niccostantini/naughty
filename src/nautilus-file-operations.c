@@ -56,6 +56,7 @@
 #include "nautilus-file-undo-operations.h"
 #include "nautilus-file-utilities.h"
 #include "nautilus-filename-utilities.h"
+#include "nautilus-global-preferences.h"
 #include "nautilus-operations-ui-manager.h"
 #include "nautilus-scheme.h"
 #include "nautilus-tag-manager.h"
@@ -4385,6 +4386,56 @@ typedef struct
     TransferInfo *transfer_info;
 } ProgressData;
 
+/* Blocks the job thread while the user keeps it paused. */
+static void
+wait_while_user_paused (CommonJob *job)
+{
+    if (!nautilus_progress_info_get_user_paused (job->progress))
+    {
+        return;
+    }
+
+    g_timer_stop (job->time);
+    while (nautilus_progress_info_get_user_paused (job->progress) && !job_aborted (job))
+    {
+        g_usleep (100 * G_TIME_SPAN_MILLISECOND);
+    }
+    g_timer_continue (job->time);
+}
+
+/* Only one copy or cross-disk move transfers data at a time; the others
+ * wait their turn, so several transfers to one disk do not slow each other. */
+static GMutex transfer_turn;
+typedef GMutex TransferTurn;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (TransferTurn, g_mutex_unlock)
+
+static TransferTurn *
+wait_for_transfer_turn (CommonJob *job)
+{
+    if (!g_settings_get_boolean (nautilus_preferences, NAUTILUS_PREFERENCES_QUEUE_FILE_TRANSFERS))
+    {
+        return NULL;
+    }
+
+    if (g_mutex_trylock (&transfer_turn))
+    {
+        return &transfer_turn;
+    }
+
+    nautilus_progress_info_set_status (job->progress, _("Waiting for other transfers to finish"), _("Queued"));
+    nautilus_progress_info_set_details (job->progress, _("Queued"));
+    while (!g_mutex_trylock (&transfer_turn))
+    {
+        if (job_aborted (job))
+        {
+            return NULL;
+        }
+        g_usleep (200 * G_TIME_SPAN_MILLISECOND);
+    }
+
+    return &transfer_turn;
+}
+
 static void
 copy_file_progress_callback (goffset  current_num_bytes,
                              goffset  total_num_bytes,
@@ -4394,6 +4445,8 @@ copy_file_progress_callback (goffset  current_num_bytes,
     goffset new_size;
 
     pdata = user_data;
+
+    wait_while_user_paused ((CommonJob *) pdata->job);
 
     if (current_num_bytes != 0 &&
         current_num_bytes != total_num_bytes)
@@ -5124,6 +5177,7 @@ copy_job_setup (GList                          *files,
     /* Need to indicate the destination for the operation notification open
      * button. */
     nautilus_progress_info_set_destination (((CommonJob *) job)->progress, target_dir);
+    nautilus_progress_info_set_pausable (((CommonJob *) job)->progress, TRUE);
     job->debuting_files = g_hash_table_new_full (g_file_hash, (GEqualFunc) g_file_equal, g_object_unref, NULL);
 
     return job;
@@ -5164,6 +5218,12 @@ nautilus_file_operations_copy (GTask        *task,
     }
 
     nautilus_progress_info_start (job->common.progress);
+
+    g_autoptr (TransferTurn) turn = wait_for_transfer_turn (common);
+    if (job_aborted (common))
+    {
+        return;
+    }
 
     scan_sources (job->files,
                   &source_info,
@@ -5716,6 +5776,7 @@ move_job_setup (GList                          *files,
     /* Need to indicate the destination for the operation notification open
      * button. */
     nautilus_progress_info_set_destination (((CommonJob *) job)->progress, job->destination);
+    nautilus_progress_info_set_pausable (((CommonJob *) job)->progress, TRUE);
     job->debuting_files = g_hash_table_new_full (g_file_hash, (GEqualFunc) g_file_equal, g_object_unref, NULL);
 
     return job;
@@ -5840,6 +5901,12 @@ nautilus_file_operations_move (GTask        *task,
 
     /* The rest we need to do deep copy + delete behind on,
      *  so scan for size */
+
+    g_autoptr (TransferTurn) turn = wait_for_transfer_turn (common);
+    if (job_aborted (common))
+    {
+        return;
+    }
 
     fallback_files = get_files_from_fallbacks (fallbacks);
     scan_sources (fallback_files,

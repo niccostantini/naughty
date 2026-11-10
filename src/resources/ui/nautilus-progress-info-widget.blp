@@ -34,6 +34,24 @@ template $NautilusProgressInfoWidget: Grid {
     }
   }
 
+  Button pause_button {
+    tooltip-text: _("Pause");
+    valign: center;
+    margin-start: 20;
+    icon-name: "media-playback-pause-symbolic";
+    visible: false;
+
+    styles [
+      "circular",
+    ]
+
+    layout {
+      column: 1;
+      row: 0;
+      row-span: 3;
+    }
+  }
+
   Button button {
     tooltip-text: _("Cancel");
     valign: center;
@@ -45,7 +63,7 @@ template $NautilusProgressInfoWidget: Grid {
     ]
 
     layout {
-      column: 1;
+      column: 2;
       row: 0;
       row-span: 3;
     }

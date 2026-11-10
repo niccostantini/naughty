@@ -70,6 +70,8 @@ struct _NautilusProgressInfo
     gboolean started;
     gboolean finished;
     gboolean paused;
+    gboolean user_paused;
+    gboolean pausable;
 
     GSource *idle_source;
     gboolean source_is_now;
@@ -585,6 +587,58 @@ nautilus_progress_info_get_is_paused (NautilusProgressInfo *info)
     G_UNLOCK (progress_info);
 
     return res;
+}
+
+/* Pause asked by the user. The job thread polls it and waits. */
+gboolean
+nautilus_progress_info_get_user_paused (NautilusProgressInfo *info)
+{
+    gboolean res;
+
+    G_LOCK (progress_info);
+    res = info->user_paused;
+    G_UNLOCK (progress_info);
+
+    return res;
+}
+
+void
+nautilus_progress_info_set_user_paused (NautilusProgressInfo *info,
+                                        gboolean              user_paused)
+{
+    G_LOCK (progress_info);
+    info->user_paused = user_paused;
+    G_UNLOCK (progress_info);
+
+    if (user_paused)
+    {
+        nautilus_progress_info_pause (info);
+    }
+    else
+    {
+        nautilus_progress_info_resume (info);
+    }
+}
+
+gboolean
+nautilus_progress_info_get_pausable (NautilusProgressInfo *info)
+{
+    gboolean res;
+
+    G_LOCK (progress_info);
+    res = info->pausable;
+    G_UNLOCK (progress_info);
+
+    return res;
+}
+
+void
+nautilus_progress_info_set_pausable (NautilusProgressInfo *info,
+                                     gboolean              pausable)
+{
+    G_LOCK (progress_info);
+    info->pausable = pausable;
+    G_UNLOCK (progress_info);
 }
 
 void

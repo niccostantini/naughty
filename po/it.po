@@ -6582,3 +6582,27 @@ msgstr "_Salta ai file mentre digiti"
 #: src/resources/ui/nautilus-preferences-dialog.blp
 msgid "Typing selects the first matching name instead of searching"
 msgstr "Digitando si seleziona il primo nome corrispondente invece di cercare"
+
+#: src/resources/ui/nautilus-preferences-dialog.blp
+msgid "_Queue File Transfers"
+msgstr "_Copie in coda"
+
+#: src/resources/ui/nautilus-preferences-dialog.blp
+msgid "Copy one batch at a time instead of all at once"
+msgstr "Copia un gruppo di file alla volta invece che tutti insieme"
+
+#: src/nautilus-file-operations.c
+msgid "Waiting for other transfers to finish"
+msgstr "In attesa che finiscano gli altri trasferimenti"
+
+#: src/nautilus-file-operations.c
+msgid "Queued"
+msgstr "In coda"
+
+#: src/resources/ui/nautilus-progress-info-widget.blp src/nautilus-progress-info-widget.c
+msgid "Pause"
+msgstr "Pausa"
+
+#: src/nautilus-progress-info-widget.c
+msgid "Resume"
+msgstr "Riprendi"

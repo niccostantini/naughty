@@ -56,6 +56,12 @@ gboolean      nautilus_progress_info_get_is_cancelled (NautilusProgressInfo *inf
 void          nautilus_progress_info_start           (NautilusProgressInfo *info);
 void          nautilus_progress_info_finish          (NautilusProgressInfo *info);
 void          nautilus_progress_info_pause           (NautilusProgressInfo *info);
+gboolean      nautilus_progress_info_get_user_paused (NautilusProgressInfo *info);
+void          nautilus_progress_info_set_user_paused (NautilusProgressInfo *info,
+                                                      gboolean              user_paused);
+gboolean      nautilus_progress_info_get_pausable    (NautilusProgressInfo *info);
+void          nautilus_progress_info_set_pausable    (NautilusProgressInfo *info,
+                                                      gboolean              pausable);
 void          nautilus_progress_info_resume          (NautilusProgressInfo *info);
 void          nautilus_progress_info_set_status      (NautilusProgressInfo *info,
 						      const char           *status,

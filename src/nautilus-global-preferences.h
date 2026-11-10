@@ -42,6 +42,9 @@ G_BEGIN_DECLS
 /* Typing selects the first matching item instead of starting a search */
 #define NAUTILUS_PREFERENCES_TYPE_AHEAD_SEARCH "type-ahead-search"
 
+/* Copies wait for each other instead of running in parallel */
+#define NAUTILUS_PREFERENCES_QUEUE_FILE_TRANSFERS "queue-file-transfers"
+
 #define NAUTILUS_PREFERENCES_OPEN_FOLDER_ON_DND_HOVER   	"open-folder-on-dnd-hover"
 
 /* Spatial or browser mode */
