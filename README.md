@@ -35,6 +35,14 @@ and remove it without touching the system.
   <img src="docs/screenshots/pdf-preview.png" alt="Spacebar preview of a three-page PDF, with page buttons showing 1 of 3" width="800">
 </p>
 
+- **Jump to files while typing.** Type the first letters of a name and Naughty selects the
+  file, as in Finder and Windows Explorer. Nautilus starts a search instead. **Ctrl+F** still
+  searches, and a switch in Preferences restores the old behaviour.
+- **Preview pane.** Press **Alt+P** for a pane with a large thumbnail and the details of the
+  selected file. It stays open until you close it.
+- **Copy queue with pause.** Copies run one after another instead of all at once, so they do not
+  slow each other down. Each copy has a **Pause** button in the operations list. A switch in
+  Preferences turns the queue off.
 - **Preview everywhere.** The preview also works for files in the Trash, inside ZIP archives,
   on network shares (SMB, SFTP) and on the Ubuntu desktop.
 - **Its own face.** A neon icon and its own name, so you never mix it up with the system Files.
@@ -140,7 +148,6 @@ Your system Files app was never changed, so it works as before.
 
 ## Roadmap
 
-- Pause and queue file copies
 - Miller column view, like Finder's column view
 - File tags
 - A package, so you do not have to build from source
