@@ -6574,3 +6574,11 @@ msgstr "Esce"
 
 msgid "_Split View"
 msgstr "_Vista divisa"
+
+#: src/resources/ui/nautilus-preferences-dialog.blp
+msgid "_Jump to Files While Typing"
+msgstr "_Salta ai file mentre digiti"
+
+#: src/resources/ui/nautilus-preferences-dialog.blp
+msgid "Typing selects the first matching name instead of searching"
+msgstr "Digitando si seleziona il primo nome corrispondente invece di cercare"

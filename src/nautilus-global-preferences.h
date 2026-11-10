@@ -39,6 +39,9 @@ G_BEGIN_DECLS
 #define NAUTILUS_PREFERENCES_CLICK_POLICY			"click-policy"
 
 /* Drag and drop preferences */
+/* Typing selects the first matching item instead of starting a search */
+#define NAUTILUS_PREFERENCES_TYPE_AHEAD_SEARCH "type-ahead-search"
+
 #define NAUTILUS_PREFERENCES_OPEN_FOLDER_ON_DND_HOVER   	"open-folder-on-dnd-hover"
 
 /* Spatial or browser mode */

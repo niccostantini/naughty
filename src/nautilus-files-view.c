@@ -777,6 +777,31 @@ nautilus_files_view_select_first (NautilusFilesView *self,
     }
 }
 
+/* Select and reveal the first item whose name starts with @prefix,
+ * ignoring case. Returns FALSE when nothing matches. */
+gboolean
+nautilus_files_view_select_by_prefix (NautilusFilesView *self,
+                                      const char        *prefix)
+{
+    g_autofree char *needle = g_utf8_casefold (prefix, -1);
+    guint n_items = g_list_model_get_n_items (G_LIST_MODEL (self->model));
+
+    for (guint position = 0; position < n_items; position++)
+    {
+        g_autoptr (NautilusViewItem) item = get_view_item (G_LIST_MODEL (self->model), position);
+        NautilusFile *file = nautilus_view_item_get_file (item);
+        g_autofree char *name = g_utf8_casefold (nautilus_file_get_display_name (file), -1);
+
+        if (g_str_has_prefix (name, needle))
+        {
+            nautilus_list_base_set_cursor (self->list_base, position, TRUE, TRUE);
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
 static void
 nautilus_files_view_call_set_selection (NautilusFilesView *self,
                                         NautilusFileList  *selection,
@@ -1742,6 +1767,12 @@ action_preview_selection (GSimpleAction *action,
 {
     NautilusFilesView *self = user_data;
     g_autolist (NautilusFile) selection = NULL;
+
+    /* Space inside a typed name continues it instead of opening the preview */
+    if (nautilus_window_slot_continue_type_ahead (self->slot, GDK_KEY_space))
+    {
+        return;
+    }
 
     selection = nautilus_files_view_get_selection (self);
 

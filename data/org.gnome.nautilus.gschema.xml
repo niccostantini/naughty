@@ -173,6 +173,11 @@
       <summary>Whether GTK 4 settings migration happened</summary>
       <description>Whether settings shared with GtkFileChooser have been migrated from their GTK 3 keys to the GTK 4 ones.</description>
     </key>
+    <key type="b" name="type-ahead-search">
+      <default>true</default>
+      <summary>Jump to files while typing</summary>
+      <description>If true, typing in a folder selects the first item whose name starts with the typed text. If false, typing starts a search.</description>
+    </key>
     <key type="b" name="open-folder-on-dnd-hover">
       <default>true</default>
       <summary>Whether to open the hovered folder after a timeout when drag and drop operation</summary>

@@ -110,6 +110,8 @@ void              nautilus_files_view_new_file_with_initial_contents (NautilusFi
                                                                       const void         *initial_contents,
                                                                       gsize               length);
 /* selection handling */
+gboolean          nautilus_files_view_select_by_prefix           (NautilusFilesView      *view,
+                                                                  const char             *prefix);
 void              nautilus_files_view_activate_selection         (NautilusFilesView      *view,
                                                                   NautilusOpenFlags       flags);
 void              nautilus_files_view_preview_selection_event    (NautilusFilesView      *view,

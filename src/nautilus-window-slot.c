@@ -90,6 +90,10 @@ struct _NautilusWindowSlot
     gboolean active : 1;
     guint loading : 1;
 
+    /* Type-ahead: text typed so far, cleared after a pause */
+    GString *type_ahead;
+    guint type_ahead_timeout_id;
+
     GtkWidget *stack;
     GtkWidget *vbox;
     AdwStatusPage *global_search_page;
@@ -566,6 +570,59 @@ nautilus_window_slot_handle_activate_files (NautilusWindowSlot *self,
     return TRUE;
 }
 
+#define TYPE_AHEAD_TIMEOUT_MS 1000
+
+static gboolean
+on_type_ahead_timeout (gpointer user_data)
+{
+    NautilusWindowSlot *self = user_data;
+
+    g_string_truncate (self->type_ahead, 0);
+    self->type_ahead_timeout_id = 0;
+
+    return G_SOURCE_REMOVE;
+}
+
+/* Returns TRUE when the key was used to jump to a file. */
+static gboolean
+handle_type_ahead (NautilusWindowSlot *self,
+                   guint               keyval,
+                   GdkModifierType     state)
+{
+    NautilusFilesView *view = nautilus_window_slot_get_current_view (self);
+    gunichar c = gdk_keyval_to_unicode (keyval);
+
+    if (view == NULL ||
+        !g_settings_get_boolean (nautilus_preferences, NAUTILUS_PREFERENCES_TYPE_AHEAD_SEARCH) ||
+        nautilus_window_slot_get_search_visible (self) ||
+        (state & (GDK_CONTROL_MASK | GDK_ALT_MASK | GDK_SUPER_MASK)) != 0 ||
+        c == 0 || !g_unichar_isprint (c))
+    {
+        return FALSE;
+    }
+
+    /* A leading space keeps opening the preview */
+    if (c == ' ' && self->type_ahead->len == 0)
+    {
+        return FALSE;
+    }
+
+    g_string_append_unichar (self->type_ahead, c);
+    g_clear_handle_id (&self->type_ahead_timeout_id, g_source_remove);
+    self->type_ahead_timeout_id = g_timeout_add (TYPE_AHEAD_TIMEOUT_MS, on_type_ahead_timeout, self);
+
+    nautilus_files_view_select_by_prefix (view, self->type_ahead->str);
+
+    return TRUE;
+}
+
+gboolean
+nautilus_window_slot_continue_type_ahead (NautilusWindowSlot *self,
+                                          guint               keyval)
+{
+    return self != NULL && handle_type_ahead (self, keyval, 0);
+}
+
 gboolean
 nautilus_window_slot_handle_event (NautilusWindowSlot    *self,
                                    GtkEventControllerKey *controller,
@@ -595,6 +652,11 @@ nautilus_window_slot_handle_event (NautilusWindowSlot    *self,
             nautilus_window_slot_set_search_visible (self, FALSE);
             return GDK_EVENT_STOP;
         }
+    }
+
+    if (handle_type_ahead (self, keyval, state))
+    {
+        return GDK_EVENT_STOP;
     }
 
     /* If the action is not enabled, don't try to handle search */
@@ -1334,6 +1396,7 @@ nautilus_window_slot_init (NautilusWindowSlot *self)
 {
     g_autofree char *home_uri = nautilus_get_home_directory_uri ();
 
+    self->type_ahead = g_string_new (NULL);
     self->slot_action_group = G_ACTION_GROUP (g_simple_action_group_new ());
     g_action_map_add_action_entries (G_ACTION_MAP (self->slot_action_group),
                                      slot_entries,
@@ -2750,6 +2813,7 @@ nautilus_window_slot_dispose (GObject *object)
     self = NAUTILUS_WINDOW_SLOT (object);
 
     g_signal_handlers_disconnect_by_data (nautilus_preferences, self);
+    g_clear_handle_id (&self->type_ahead_timeout_id, g_source_remove);
 
     nautilus_window_slot_clear_forward_list (self);
     nautilus_window_slot_clear_back_list (self);
@@ -2804,6 +2868,7 @@ nautilus_window_slot_finalize (GObject *object)
     NautilusWindowSlot *self;
     self = NAUTILUS_WINDOW_SLOT (object);
     g_clear_pointer (&self->title, g_free);
+    g_string_free (self->type_ahead, TRUE);
 
     G_OBJECT_CLASS (nautilus_window_slot_parent_class)->finalize (object);
 }
