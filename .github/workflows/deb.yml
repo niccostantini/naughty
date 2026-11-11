@@ -16,7 +16,11 @@ permissions:
 jobs:
   deb:
     runs-on: ubuntu-latest
-    container: ubuntu:26.04
+    container:
+      image: ubuntu:26.04
+      # Since 2026-11-11 the Docker network of the hosted runners sometimes
+      # cannot resolve archive.ubuntu.com; public resolvers avoid that.
+      options: --dns 1.1.1.1 --dns 8.8.8.8
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
