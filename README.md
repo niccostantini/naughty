@@ -5,7 +5,7 @@
 <h1 align="center">Naughty</h1>
 
 <p align="center">
-  <b>GNOME Files with the two things it always lacked: a split view and a real spacebar preview.</b>
+  <b>GNOME Files with what you miss from Finder and Windows Explorer: split view, a preview pane, jump-to-file typing and a copy queue you can pause.</b>
 </p>
 
 <p align="center">
@@ -38,6 +38,10 @@ and remove it without touching the system.
 - **Jump to files while typing.** Type the first letters of a name and Naughty selects the
   file, as in Finder and Windows Explorer. Nautilus starts a search instead. **Ctrl+F** still
   searches, and a switch in Preferences restores the old behaviour.
+<p align="center">
+  <img src="docs/screenshots/preview-pane.png" alt="The preview pane on the right shows a PDF brochure page by page, with its name, type, size and date below" width="800">
+</p>
+
 - **Preview pane.** Press **Alt+P** for a pane beside the files that shows the selected file:
   PDFs and Office documents page by page, text files as text, images in full quality, and a
   thumbnail for everything else, with name, type, size and date. Drag its edge to resize it;
@@ -49,6 +53,17 @@ and remove it without touching the system.
   on network shares (SMB, SFTP) and on the Ubuntu desktop.
 - **Its own face.** A neon icon and its own name, so you never mix it up with the system Files.
 
+### Shortcuts
+
+| Keys | Does |
+|---|---|
+| **F3** | Open or close the split view |
+| **Alt+P** | Show or hide the preview pane |
+| **Space** | Spacebar preview of the selected file |
+| *Type a name* | Jump to the first file that starts with it |
+| **Ctrl+F** | Search |
+| **Ctrl+W** | Close the second pane of the split view |
+
 The spacebar previewer is a patched copy of GNOME Sushi:
 [naughty-sushi](https://github.com/niccostantini/naughty-sushi).
 
@@ -58,7 +73,7 @@ Naughty is a good fit if all of these are true:
 
 - You use **GNOME 50**. Naughty was built and tested only on **Ubuntu 26.04**.
 - You are comfortable building software from source. There are no packages yet.
-- You want split view or Office previews more than a polished, supported product.
+- You want these features more than a polished, supported product.
 
 Naughty is a personal project. It does not follow GNOME's release schedule, and it has no
 automatic updates. Bugs belong in [this repository's issues](https://github.com/niccostantini/naughty/issues),
