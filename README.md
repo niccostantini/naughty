@@ -257,12 +257,17 @@ notices stay in the source files. Every change made for Naughty is a separate co
 the upstream `gnome-50` branch, so you can see exactly what differs.
 
 The previewer, [naughty-sushi](https://github.com/niccostantini/naughty-sushi), keeps GNOME
-Sushi's license, GPL-2.0-or-later. Naughty does not include LibreOffice or OnlyOffice. It runs
+Sushi's license, GPL-2.0-or-later with the GStreamer exception (see its `COPYING`). Naughty also
+includes a few helpers from xdg-desktop-portal-gnome (`xdp-gnome/`, LGPL-2.0-or-later). The
+per-file licenses are listed in [`packaging/copyright`](packaging/copyright), which the .deb ships
+as `/usr/share/doc/naughty/copyright`. Naughty does not include LibreOffice or OnlyOffice. It runs
 the copy you installed, as a separate program.
 
 Naughty is **not** made, endorsed or supported by the GNOME Foundation. "GNOME", "Nautilus"
 and "Files" refer to the original project. The full-colour Naughty icon is original artwork made for
-this fork; the symbolic (monochrome) icon is the one from Nautilus.
+this fork, © 2026 Niccolò Costantini, released under GPL-3.0-or-later like the rest of Naughty. The
+symbolic (monochrome) icon is the one from Nautilus, and the previewer icon is GNOME Sushi's,
+renamed; both keep their project's license.
 
 ---
 

@@ -1,0 +1,215 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Naughty
+Upstream-Contact: Niccolò Costantini <65295160+niccostantini@users.noreply.github.com>
+Source: https://github.com/niccostantini/naughty
+Comment: Paths refer to the Naughty source tree. The previewer, naughty-sushi
+ (https://github.com/niccostantini/naughty-sushi), is built from
+ subprojects/sushi. Only the files that end up in this package are listed.
+ Naughty as a whole is distributed under GPL-3.0+; the files below under
+ GPL-2.0+, LGPL-2+, LGPL-2.1+ and CC0-1.0 keep their own, compatible, licenses.
+
+Files: *
+Copyright: 1999-2026 The Nautilus authors (see the AUTHORS file and source headers)
+           2026 Niccolò Costantini
+License: GPL-3+
+
+Files: src/nautilus-application.c src/nautilus-application.h
+ src/nautilus-batch-rename-dialog.c src/nautilus-batch-rename-dialog.h
+ src/nautilus-batch-rename-item.c src/nautilus-batch-rename-item.h
+ src/nautilus-batch-rename-utilities.c src/nautilus-batch-rename-utilities.h
+ src/nautilus-bookmark-list.c src/nautilus-bookmark-list.h
+ src/nautilus-date-utilities.c src/nautilus-date-utilities.h
+ src/nautilus-dbus-manager.c src/nautilus-dbus-manager.h
+ src/nautilus-dialog-utilities.c src/nautilus-dialog-utilities.h
+ src/nautilus-directory-async.c src/nautilus-directory-notify.h
+ src/nautilus-directory-private.h src/nautilus-directory.c
+ src/nautilus-directory.h src/nautilus-file-changes-queue.c
+ src/nautilus-file-changes-queue.h src/nautilus-file-conflict-dialog.c
+ src/nautilus-file-conflict-dialog.h src/nautilus-file-operations-dbus-data.c
+ src/nautilus-file-operations-dbus-data.h src/nautilus-file-operations.c
+ src/nautilus-file-operations.h src/nautilus-file-private.h
+ src/nautilus-file-undo-manager.c src/nautilus-file-undo-manager.h
+ src/nautilus-file-undo-operations.c src/nautilus-file-undo-operations.h
+ src/nautilus-file.c src/nautilus-file.h src/nautilus-filename-utilities.c
+ src/nautilus-filename-utilities.h src/nautilus-filename-validator.c
+ src/nautilus-filename-validator.h src/nautilus-files-view-dnd.c
+ src/nautilus-files-view-dnd.h src/nautilus-files-view.c
+ src/nautilus-files-view.h src/nautilus-freedesktop-dbus.c
+ src/nautilus-freedesktop-dbus.h src/nautilus-hash-queue.c
+ src/nautilus-hash-queue.h src/nautilus-history-controls.c
+ src/nautilus-history-controls.h src/nautilus-keyfile-metadata.c
+ src/nautilus-keyfile-metadata.h src/nautilus-location-banner.c
+ src/nautilus-location-banner.h src/nautilus-location-entry.c
+ src/nautilus-location-entry.h src/nautilus-main.c src/nautilus-metadata.h
+ src/nautilus-monitor.c src/nautilus-monitor.h src/nautilus-previewer.c
+ src/nautilus-previewer.h src/nautilus-progress-indicator.c
+ src/nautilus-progress-indicator.h src/nautilus-progress-info-manager.c
+ src/nautilus-progress-info-manager.h src/nautilus-progress-info-widget.c
+ src/nautilus-progress-info-widget.h src/nautilus-progress-info.c
+ src/nautilus-progress-info.h src/nautilus-progress-persistence-handler.c
+ src/nautilus-progress-persistence-handler.h src/nautilus-query-editor.c
+ src/nautilus-query-editor.h src/nautilus-query.c src/nautilus-query.h
+ src/nautilus-search-directory-file.c src/nautilus-search-directory-file.h
+ src/nautilus-search-directory.c src/nautilus-search-directory.h
+ src/nautilus-search-engine-localsearch.c
+ src/nautilus-search-engine-localsearch.h src/nautilus-search-engine-model.c
+ src/nautilus-search-engine-model.h src/nautilus-search-engine-simple.c
+ src/nautilus-search-engine-simple.h src/nautilus-search-engine.c
+ src/nautilus-search-engine.h src/nautilus-search-hit.c
+ src/nautilus-search-hit.h src/nautilus-search-provider.c
+ src/nautilus-search-provider.h src/nautilus-shell-search-provider.c
+ src/nautilus-shell-search-provider.h src/nautilus-sidebar.c
+ src/nautilus-signaller.c src/nautilus-signaller.h
+ src/nautilus-starred-directory.c src/nautilus-starred-directory.h
+ src/nautilus-tag-manager.c src/nautilus-tag-manager.h
+ src/nautilus-thumbnails.c src/nautilus-thumbnails.h
+ src/nautilus-toolbar-menu-sections.h src/nautilus-toolbar.c
+ src/nautilus-toolbar.h src/nautilus-trash-monitor.c
+ src/nautilus-trash-monitor.h src/nautilus-vfs-directory.c
+ src/nautilus-vfs-directory.h src/nautilus-vfs-file.c src/nautilus-vfs-file.h
+ src/nautilus-view-controls.c src/nautilus-view-controls.h
+ src/nautilus-window-slot.c src/nautilus-window-slot.h src/nautilus-window.c
+ src/nautilus-window.h src/nautilus-x-content-bar.c
+ src/nautilus-x-content-bar.h
+Copyright: 1999-2026 The Nautilus authors (see the source headers)
+License: GPL-2+
+
+Files: src/nautilus-autorun-software.c src/nautilus-bookmark.c
+ src/nautilus-bookmark.h src/nautilus-clipboard.c src/nautilus-clipboard.h
+ src/nautilus-column-chooser.c src/nautilus-column-chooser.h
+ src/nautilus-column-utilities.c src/nautilus-column-utilities.h
+ src/nautilus-error-reporting.c src/nautilus-error-reporting.h
+ src/nautilus-file-utilities.c src/nautilus-file-utilities.h
+ src/nautilus-floating-bar.c src/nautilus-floating-bar.h
+ src/nautilus-global-preferences.c src/nautilus-global-preferences.h
+ src/nautilus-icon-info.c src/nautilus-metadata.c src/nautilus-mime-actions.c
+ src/nautilus-mime-actions.h src/nautilus-module.c src/nautilus-module.h
+ src/nautilus-pathbar.c src/nautilus-pathbar.h
+ src/nautilus-preferences-dialog.c src/nautilus-preferences-dialog.h
+ src/nautilus-program-choosing.c src/nautilus-program-choosing.h
+ src/nautilus-properties.c src/nautilus-properties.h
+ src/nautilus-ui-utilities.c src/nautilus-ui-utilities.h
+ src/nautilus-undo-private.h
+Copyright: 1999-2016 Eazel, Inc., Red Hat, Inc., Novell, Inc. and other
+           Nautilus authors (see the source headers)
+License: LGPL-2+
+
+Files: src/nautilus-recent-servers.c
+Copyright: 2015 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+License: LGPL-2.1+
+
+Files: src/nautilus-sidebar-row.c src/nautilus-sidebar-row.h src/nautilus-sidebar.h
+Copyright: 2015 Carlos Soriano <csoriano@gnome.org>
+           The GTK and Nautilus authors (see the source headers)
+License: LGPL-2.1+
+Comment: These files were copied from GTK's places sidebar, where they are
+ LGPL-2.1+. Their current headers say "GPL-2.1-or-later", a license that does
+ not exist; the GTK license is given here.
+
+Files: xdp-gnome/externalwindow-wayland.c xdp-gnome/externalwindow-wayland.h
+ xdp-gnome/externalwindow-x11.c xdp-gnome/externalwindow-x11.h
+ xdp-gnome/externalwindow.c xdp-gnome/externalwindow.h xdp-gnome/request.c
+ xdp-gnome/request.h
+Copyright: 2016 Red Hat, Inc
+License: LGPL-2+
+Comment: Copied from xdg-desktop-portal-gnome
+ (https://gitlab.gnome.org/GNOME/xdg-desktop-portal-gnome) and linked
+ statically into the Naughty binary. See xdp-gnome/README.md and
+ xdp-gnome/COPYING.
+
+Files: data/org.gnome.Nautilus.metainfo.xml.in.in
+       subprojects/sushi/data/org.gnome.NautilusPreviewer.metainfo.xml.in.in
+Copyright: The Nautilus and Sushi authors
+License: CC0-1.0
+Comment: AppStream metadata (metadata_license in the files).
+
+Files: data/icons/hicolor/scalable/apps/io.github.niccostantini.Naughty.svg
+Copyright: 2026 Niccolò Costantini
+License: GPL-3+
+Comment: Original artwork made for Naughty. The symbolic icon is Nautilus's.
+
+Files: subprojects/sushi/*
+Copyright: 2011 Red Hat, Inc.
+           2010-2026 The Sushi authors (see the source headers)
+           2026 Niccolò Costantini
+License: GPL-2+ with GStreamer exception
+
+Files: subprojects/sushi/data/icons/hicolor/scalable/apps/io.github.niccostantini.Naughty.Previewer.svg
+Copyright: 2026 Peter Eisenmann and the Sushi authors
+License: GPL-2+ with GStreamer exception
+Comment: GNOME Sushi's app icon (org.gnome.NautilusPreviewer.svg), only renamed.
+
+Files: subprojects/sushi/src/widgets/shyBin.js
+Copyright: 2023-2025 Sophie Herold
+License: GPL-3+ with GStreamer exception
+Comment: Adapted from GNOME Loupe.
+
+Files: subprojects/sushi/src/libsushi/externalwindow.c
+       subprojects/sushi/src/libsushi/externalwindow.h
+Copyright: 2016 Red Hat, Inc
+License: LGPL-2+
+
+License: GPL-3+
+ This program is free software: you can redistribute it and/or modify it
+ under the terms of the GNU General Public License as published by the Free
+ Software Foundation, either version 3 of the License, or (at your option)
+ any later version.
+ .
+ On Debian systems the full license is in /usr/share/common-licenses/GPL-3.
+
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify it
+ under the terms of the GNU General Public License as published by the Free
+ Software Foundation; either version 2 of the License, or (at your option)
+ any later version.
+ .
+ On Debian systems the full license is in /usr/share/common-licenses/GPL-2.
+
+License: GPL-2+ with GStreamer exception
+ This program is free software; you can redistribute it and/or modify it
+ under the terms of the GNU General Public License as published by the Free
+ Software Foundation; either version 2 of the License, or (at your option)
+ any later version.
+ .
+ The Sushi project hereby grants permission for non-GPL compatible
+ GStreamer plugins to be used and distributed together with GStreamer and
+ Sushi. This permission is above and beyond the permissions granted by
+ the GPL license by which Sushi is covered. If you modify this code, you may
+ extend this exception to your version of the code, but you are not obligated
+ to do so. If you do not wish to do so, delete this exception statement from
+ your version.
+ .
+ On Debian systems the full license is in /usr/share/common-licenses/GPL-2.
+
+License: GPL-3+ with GStreamer exception
+ This program is free software: you can redistribute it and/or modify it
+ under the terms of the GNU General Public License as published by the Free
+ Software Foundation, either version 3 of the License, or (at your option)
+ any later version.
+ .
+ The GStreamer exception (SPDX: GStreamer-exception-2008) applies, with the
+ same wording as in the "GPL-2+ with GStreamer exception" paragraph.
+ .
+ On Debian systems the full license is in /usr/share/common-licenses/GPL-3.
+
+License: LGPL-2+
+ This library is free software; you can redistribute it and/or modify it
+ under the terms of the GNU Library General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or (at your
+ option) any later version.
+ .
+ On Debian systems the full license is in /usr/share/common-licenses/LGPL-2.
+
+License: LGPL-2.1+
+ This library is free software; you can redistribute it and/or modify it
+ under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation; either version 2.1 of the License, or (at your
+ option) any later version.
+ .
+ On Debian systems the full license is in /usr/share/common-licenses/LGPL-2.1.
+
+License: CC0-1.0
+ To the extent possible under law, the authors have waived all copyright and
+ related or neighboring rights to this work.
+ .
+ On Debian systems the full license is in /usr/share/common-licenses/CC0-1.0.

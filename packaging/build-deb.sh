@@ -143,27 +143,9 @@ naughty: unusual-interpreter -S [opt/naughty/bin/sushi]
 naughty: unusual-interpreter -S [opt/naughty/libexec/$PV]
 EOF
 
-{
-    echo "Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/"
-    echo "Upstream-Name: Naughty"
-    echo "Source: https://github.com/niccostantini/naughty"
-    echo
-    echo "Files: *"
-    echo "Copyright: 1999-2026 The Nautilus authors (see the AUTHORS file and source headers)"
-    echo "           2026 Niccolò Costantini"
-    echo "License: GPL-3.0+"
-    echo " On Debian systems the full license is in /usr/share/common-licenses/GPL-3."
-    echo " Some source files are under LGPL-2.1+ or carry the GStreamer exception;"
-    echo " both are compatible with GPL-3.0+, the license of the program as a whole."
-    echo " The AppStream metainfo is under CC0-1.0."
-    echo
-    echo "Files: opt/naughty/libexec/* opt/naughty/bin/sushi opt/naughty/share/sushi/* opt/naughty/lib/*/sushi/*"
-    echo "Copyright: 2011-2026 The Sushi authors (see the source headers)"
-    echo "           2026 Niccolò Costantini"
-    echo "Source: https://github.com/niccostantini/naughty-sushi"
-    echo "License: GPL-2.0+"
-    echo " On Debian systems the full license is in /usr/share/common-licenses/GPL-2."
-} > "$DEST/usr/share/doc/naughty/copyright"
+# Per-file licenses from the source headers; update it when a rebase adds
+# files with a license other than GPL-3.0+.
+install -m644 "$REPO/packaging/copyright" "$DEST/usr/share/doc/naughty/copyright"
 printf 'naughty (%s) unstable; urgency=medium\n\n  * Naughty commit %s, naughty-sushi commit %s.\n\n -- Niccolò Costantini <65295160+niccostantini@users.noreply.github.com>  %s\n' \
     "$VERSION" "$(git -C "$REPO" rev-parse --short=12 HEAD)$(git -C "$REPO" diff --quiet HEAD || echo -dirty)" \
     "$(git -C "$SUSHI_SRC" rev-parse --short=12 HEAD)$(git -C "$SUSHI_SRC" diff --quiet HEAD || echo -dirty)" "$(date -R)" \
