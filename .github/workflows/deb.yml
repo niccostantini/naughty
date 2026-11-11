@@ -29,6 +29,8 @@ jobs:
           apt-get install -y meson ninja-build git blueprint-compiler libgtk-4-dev libadwaita-1-dev libgdk-pixbuf-2.0-dev libglycin-2-dev libglycin-gtk4-2-dev libgnome-autoar-0-dev libgnome-desktop-4-dev libgstreamer-plugins-base1.0-dev libicu-dev libportal-dev libportal-gtk4-dev libtinysparql-dev libcloudproviders-dev libwayland-dev libgirepository-2.0-dev libpapers-dev libgtksourceview-5-dev libwebkitgtk-6.0-dev gir1.2-papers-4.0 gir1.2-gtksource-5 gir1.2-webkit-6.0
           # Already on a desktop install, missing from the bare container
           apt-get install -y build-essential pkg-config ca-certificates gettext gjs gobject-introspection libglib2.0-bin desktop-file-utils appstream python3 dpkg-dev lintian
+          # Naughty links the system copy (see build-deb.sh); dpkg-shlibdeps must find it
+          apt-get install -y libnautilus-extension4
 
       - uses: actions/checkout@v5
 
