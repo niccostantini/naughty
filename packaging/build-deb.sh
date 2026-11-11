@@ -9,6 +9,7 @@
 #   /usr/share/icons/hicolor/{scalable,symbolic}/apps/io.github.niccostantini.Naughty*.svg
 #   /usr/share/dbus-1/services/org.gnome.NautilusPreviewer.service
 #   /usr/share/doc/naughty/
+#   /usr/share/man/man1/naughty.1.gz
 #
 # Usage: packaging/build-deb.sh            (run from anywhere in the repo)
 # Env:   WORK=dir      build and staging folder (default: <repo>/build-deb)
@@ -79,7 +80,8 @@ glib-compile-schemas "$O/share/glib-2.0/schemas"
 # --- Files outside /opt -----------------------------------------------------
 install -d "$DEST/usr/bin" "$DEST/usr/share/applications" \
     "$DEST/usr/share/dbus-1/services" "$DEST/usr/share/doc/naughty" \
-    "$DEST/usr/share/icons/hicolor/scalable/apps" "$DEST/usr/share/icons/hicolor/symbolic/apps"
+    "$DEST/usr/share/icons/hicolor/scalable/apps" "$DEST/usr/share/icons/hicolor/symbolic/apps" \
+    "$DEST/usr/share/man/man1"
 
 cat > "$DEST/usr/bin/naughty" <<EOF
 #!/bin/sh
@@ -89,6 +91,16 @@ export XDG_DATA_DIRS="$PREFIX/share:\${XDG_DATA_DIRS:-/usr/local/share:/usr/shar
 exec $PREFIX/bin/nautilus "\$@"
 EOF
 chmod 755 "$DEST/usr/bin/naughty"
+
+# Upstream's manual page, renamed for the naughty command.
+sed -e 's/^\.TH Nautilus /.TH Naughty /' \
+    -e 's/^nautilus \\- a file manager for GNOME$/naughty \\- file manager forked from GNOME Files/' \
+    -e 's/^\.B nautilus$/.B naughty/' \
+    -e 's/^is a file manager, designed for the GNOME desktop\.$/is a personal fork of GNOME Files (Nautilus); it installs in \/opt\/naughty./' \
+    -e 's/^Quit Nautilus\.$/Quit Naughty./' \
+    -e 's|^https://apps.gnome.org/Nautilus$|https://github.com/niccostantini/naughty|' \
+    -e 's|^https://gitlab.gnome.org/GNOME/nautilus/issues$|https://github.com/niccostantini/naughty/issues|' \
+    "$REPO/docs/nautilus.1" | gzip -9n > "$DEST/usr/share/man/man1/naughty.1.gz"
 
 # The previewer's launcher and icon, as gnome-sushi installs them, so the
 # desktop can name its window.
@@ -125,6 +137,9 @@ cat > "$DEST/usr/share/lintian/overrides/naughty" <<EOF
 naughty: dir-or-file-in-opt [opt/naughty/*]
 # Sushi's web extension keeps the RUNPATH of its private library folder.
 naughty: custom-library-search-path RUNPATH $PREFIX/lib/$LIBDIR/sushi [opt/naughty/lib/$LIBDIR/sushi/web-process-extensions/libsushiwebprocessextension.so]
+# Sushi's own launchers start with "#!/usr/bin/env -S gjs -m"; coreutils env supports -S.
+naughty: unusual-interpreter -S [opt/naughty/bin/sushi]
+naughty: unusual-interpreter -S [opt/naughty/libexec/org.gnome.NautilusPreviewer]
 EOF
 
 {
