@@ -116,15 +116,22 @@ button_clicked (GtkWidget                  *button,
 }
 
 static void
+update_pause_button (NautilusProgressInfoWidget *self)
+{
+    gboolean paused = nautilus_progress_info_get_user_paused (self->priv->info);
+
+    gtk_button_set_icon_name (GTK_BUTTON (self->priv->pause_button),
+                              paused ? "media-playback-start-symbolic" : "media-playback-pause-symbolic");
+    gtk_widget_set_tooltip_text (self->priv->pause_button, paused ? _("Resume") : _("Pause"));
+}
+
+static void
 pause_button_clicked (GtkWidget                  *button,
                       NautilusProgressInfoWidget *self)
 {
-    gboolean paused = !nautilus_progress_info_get_user_paused (self->priv->info);
-
-    nautilus_progress_info_set_user_paused (self->priv->info, paused);
-    gtk_button_set_icon_name (GTK_BUTTON (button),
-                              paused ? "media-playback-start-symbolic" : "media-playback-pause-symbolic");
-    gtk_widget_set_tooltip_text (button, paused ? _("Resume") : _("Pause"));
+    nautilus_progress_info_set_user_paused (self->priv->info,
+                                            !nautilus_progress_info_get_user_paused (self->priv->info));
+    update_pause_button (self);
 }
 
 static void
@@ -183,6 +190,8 @@ nautilus_progress_info_widget_constructed (GObject *obj)
 
     update_data (self);
     update_progress (self);
+    /* The popover recreates this widget; show a paused job as paused */
+    update_pause_button (self);
 }
 
 static void

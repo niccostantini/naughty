@@ -166,13 +166,14 @@ static void
 on_document_loaded (PpsJob              *job,
                     NautilusPreviewPane *self)
 {
-    PpsDocument *document;
+    g_autoptr (PpsDocument) document = NULL;
 
     if (job != g_object_get_data (G_OBJECT (self), "document-job") ||
         !pps_job_is_succeeded (job, NULL))
     {
         return;
     }
+    /* transfer full */
     document = pps_job_load_get_loaded_document (PPS_JOB_LOAD (job));
     if (document == NULL || pps_document_get_n_pages (document) == 0)
     {
@@ -531,10 +532,16 @@ set_file (NautilusPreviewPane *self,
     }
 
     /* Drop the work started for the previous file */
+    PpsJob *old_job = g_object_get_data (G_OBJECT (self), "document-job");
+
     g_cancellable_cancel (self->cancellable);
     g_clear_object (&self->cancellable);
     self->cancellable = g_cancellable_new ();
-    g_object_set_data (G_OBJECT (self), "document-job", NULL);
+    if (old_job != NULL)
+    {
+        pps_job_cancel (old_job);
+        g_object_set_data (G_OBJECT (self), "document-job", NULL);
+    }
 
     if (self->file != NULL)
     {
