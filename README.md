@@ -223,8 +223,8 @@ Sushi's license, GPL-2.0-or-later. Naughty does not include LibreOffice or OnlyO
 the copy you installed, as a separate program.
 
 Naughty is **not** made, endorsed or supported by the GNOME Foundation. "GNOME", "Nautilus"
-and "Files" refer to the original project. The Naughty icon is original artwork made for this
-fork.
+and "Files" refer to the original project. The full-colour Naughty icon is original artwork made for
+this fork; the symbolic (monochrome) icon is the one from Nautilus.
 
 ---
 
