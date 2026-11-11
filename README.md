@@ -72,7 +72,7 @@ The spacebar previewer is a patched copy of GNOME Sushi:
 Naughty is a good fit if all of these are true:
 
 - You use **GNOME 50**. Naughty was built and tested only on **Ubuntu 26.04**.
-- You are comfortable building software from source. There are no packages yet.
+- You are fine with a package from a personal GitHub page, not from Ubuntu's archive.
 - You want these features more than a polished, supported product.
 
 Naughty is a personal project. It does not follow GNOME's release schedule, and it has no
@@ -80,6 +80,30 @@ automatic updates. Bugs belong in [this repository's issues](https://github.com/
 **never** in GNOME's bug tracker.
 
 ## Install
+
+Download `naughty_<version>_amd64.deb` from the
+[latest release](https://github.com/niccostantini/naughty/releases/latest), then install it:
+
+```bash
+sudo apt install ./naughty_*_amd64.deb
+```
+
+The package installs into `/opt/naughty` and adds the `naughty` command, a launcher in the app
+grid and the spacebar previewer. It does not change the system Files app. It replaces
+`gnome-sushi`, if you have it, because both provide the same previewer service.
+
+Naughty now appears in your app grid. Open it, select a PDF and press **Space**.
+
+To make Naughty open your folders:
+
+```bash
+xdg-mime default io.github.niccostantini.Naughty.desktop inode/directory
+```
+
+To build the package yourself, run `packaging/build-deb.sh` in a clone of this repository
+after step 1 below. It writes the `.deb` to `build-deb/`.
+
+### Build from source instead
 
 > All of this installs into `~/.local`. It needs `sudo` only for the build dependencies.
 
@@ -143,6 +167,18 @@ PDF previews work without either one.
 
 ## Uninstall
 
+If you installed the package:
+
+```bash
+xdg-mime default org.gnome.Nautilus.desktop inode/directory
+sudo apt remove naughty
+```
+
+If you had `gnome-sushi` before, install it again with `sudo apt install gnome-sushi`.
+Your preferences stay in dconf under `/io/github/niccostantini/Naughty/`.
+
+If you built from source:
+
 ```bash
 xdg-mime default org.gnome.Nautilus.desktop inode/directory
 rm -rf ~/.local/opt/naughty
@@ -156,13 +192,13 @@ Your system Files app was never changed, so it works as before.
 - **Bundled extensions off.** Nautilus' own image-properties extension is not built, because
   Ubuntu 26.04 lacks `gexiv2` 0.16. Extensions installed on the system for Files still load,
   including that one from Ubuntu's package, `nautilus-python` scripts and cloud-sync menus.
-- **Shared previewer.** After step 4, the system Files app also uses Naughty's previewer.
-  The uninstall steps undo this.
+- **Shared previewer.** The system Files app also uses Naughty's previewer, after you install
+  the package or after step 4 of the source build. The uninstall steps undo this.
 - **Preview pane on local files only.** Files in the Trash, in archives or on network shares
   show a thumbnail in the pane; the spacebar preview still shows them in full. Audio and video
   show a thumbnail too. Converted Office documents are kept in `~/.cache/naughty/previews`.
 - **Papers updates.** The preview pane uses Papers' C library, which has no stable API. If
-  previews break after a Papers update, rebuild Naughty.
+  previews break after a Papers update, install a newer package or rebuild Naughty.
 - **Previews of remote files make a copy.** Files from ZIP archives and network shares are
   copied to `~/.cache/sushi` before the preview. That folder is not emptied automatically.
 - **Fresh settings.** Naughty keeps its own preferences, apart from the system Files. To start
@@ -173,7 +209,6 @@ Your system Files app was never changed, so it works as before.
 
 - Miller column view, like Finder's column view
 - File tags
-- A package, so you do not have to build from source
 
 ## License and credits
 
