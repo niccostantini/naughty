@@ -1,0 +1,49 @@
+# Build the .deb with packaging/build-deb.sh on Ubuntu 26.04 and check it
+# with lintian. The weekly run catches Ubuntu updates (Papers above all, whose
+# C API is unstable) that break the build. Nothing is released from here.
+name: deb
+
+on:
+  push:
+    branches: ['**']
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  deb:
+    runs-on: ubuntu-latest
+    container: ubuntu:26.04
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      # git must be there before the checkout, so it keeps .git: the script
+      # reads the commit for the Debian changelog.
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          # README "Build from source instead", step 1
+          apt-get install -y meson ninja-build git blueprint-compiler libgtk-4-dev libadwaita-1-dev libgdk-pixbuf-2.0-dev libglycin-2-dev libglycin-gtk4-2-dev libgnome-autoar-0-dev libgnome-desktop-4-dev libgstreamer-plugins-base1.0-dev libicu-dev libportal-dev libportal-gtk4-dev libtinysparql-dev libcloudproviders-dev libwayland-dev libgirepository-2.0-dev libpapers-dev libgtksourceview-5-dev libwebkitgtk-6.0-dev gir1.2-papers-4.0 gir1.2-gtksource-5 gir1.2-webkit-6.0
+          # Already on a desktop install, missing from the bare container
+          apt-get install -y build-essential pkg-config ca-certificates gettext gjs gobject-introspection libglib2.0-bin desktop-file-utils appstream python3 dpkg-dev lintian
+
+      - uses: actions/checkout@v5
+
+      # build-deb.sh clones naughty-sushi (branch fork) itself, because
+      # subprojects/ is not in the repository.
+      - name: Build the .deb
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          packaging/build-deb.sh
+
+      - name: Run lintian
+        run: lintian --info --fail-on error build-deb/*.deb
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: naughty-deb
+          path: build-deb/*.deb
+          if-no-files-found: error
