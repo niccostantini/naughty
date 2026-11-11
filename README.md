@@ -79,6 +79,12 @@ Naughty is a personal project. It does not follow GNOME's release schedule, and 
 automatic updates. Bugs belong in [this repository's issues](https://github.com/niccostantini/naughty/issues),
 **never** in GNOME's bug tracker.
 
+> [!WARNING]
+> **Back up your files, and expect no warranty.** Naughty changes how files are copied and
+> moved (the copy queue and pause). A bug could damage or lose files. Keep a backup of anything
+> you cannot afford to lose. Naughty comes with no warranty of any kind, as stated in sections
+> 15 and 16 of the [GNU GPL](LICENSE).
+
 ## Install
 
 Download `naughty_<version>_amd64.deb` from the
