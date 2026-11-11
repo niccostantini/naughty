@@ -76,7 +76,8 @@ Naughty is a good fit if all of these are true:
 - You want these features more than a polished, supported product.
 
 Naughty is a personal project. It does not follow GNOME's release schedule, and it has no
-automatic updates. Bugs belong in [this repository's issues](https://github.com/niccostantini/naughty/issues),
+automatic updates: to get an email for each new version, click **Watch → Custom → Releases**
+at the top of this page. Bugs belong in [this repository's issues](https://github.com/niccostantini/naughty/issues),
 **never** in GNOME's bug tracker.
 
 > [!WARNING]
