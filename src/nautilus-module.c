@@ -255,6 +255,10 @@ nautilus_module_setup (void)
         initialized = TRUE;
 
         load_module_dir (NAUTILUS_EXTENSIONDIR);
+        if (g_strcmp0 (NAUTILUS_EXTENSIONDIR, NAUTILUS_SYSTEM_EXTENSIONDIR) != 0)
+        {
+            load_module_dir (NAUTILUS_SYSTEM_EXTENSIONDIR);
+        }
     }
 }
 

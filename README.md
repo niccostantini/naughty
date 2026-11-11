@@ -153,8 +153,9 @@ Your system Files app was never changed, so it works as before.
 
 ## Known limits
 
-- **No extensions.** Nautilus extensions (for example `nautilus-python` scripts or cloud-sync
-  emblems) do not load. They are off in the build because Ubuntu 26.04 lacks `gexiv2` 0.16.
+- **Bundled extensions off.** Nautilus' own image-properties extension is not built, because
+  Ubuntu 26.04 lacks `gexiv2` 0.16. Extensions installed on the system for Files still load,
+  including that one from Ubuntu's package, `nautilus-python` scripts and cloud-sync menus.
 - **Shared previewer.** After step 4, the system Files app also uses Naughty's previewer.
   The uninstall steps undo this.
 - **Preview pane on local files only.** Files in the Trash, in archives or on network shares
