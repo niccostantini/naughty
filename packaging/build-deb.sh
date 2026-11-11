@@ -159,7 +159,9 @@ SHL=$WORK/shlibs
 rm -rf "$SHL" && mkdir -p "$SHL/debian"
 printf 'Source: naughty\n\nPackage: naughty\nArchitecture: any\n' > "$SHL/debian/control"
 ELFS=$(find "$DEST" -type f \( -perm -u+x -o -name '*.so*' \) -exec sh -c 'head -c4 "$1" | grep -q ELF' _ {} \; -print)
-SHLIBS=$(cd "$SHL" && dpkg-shlibdeps -O -l"$O/lib/$LIBDIR/sushi" $ELFS | sed -n 's/^shlibs:Depends=//p')
+# Two steps: in a pipeline, set -e would miss a dpkg-shlibdeps failure.
+SHLIBS=$(cd "$SHL" && dpkg-shlibdeps -O -l"$O/lib/$LIBDIR/sushi" $ELFS)
+SHLIBS=$(printf '%s\n' "$SHLIBS" | sed -n 's/^shlibs:Depends=//p')
 
 # GObject introspection modules imported by the previewer (gjs), not visible
 # to dpkg-shlibdeps.
