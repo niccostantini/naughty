@@ -39,8 +39,8 @@
 #endif
 
 #define PREVIEWER2_DBUS_IFACE "org.gnome.NautilusPreviewer2"
-#define PREVIEWER_DBUS_NAME "org.gnome.NautilusPreviewer"
-#define PREVIEWER_DBUS_PATH "/org/gnome/NautilusPreviewer"
+#define PREVIEWER_DBUS_NAME "io.github.niccostantini.Naughty.Previewer"
+#define PREVIEWER_DBUS_PATH "/io/github/niccostantini/Naughty/Previewer"
 
 static const char *previewer_dbus_name = PREVIEWER_DBUS_NAME PROFILE;
 static const char *previewer_dbus_path = PREVIEWER_DBUS_PATH PROFILE;

@@ -123,8 +123,10 @@ sudo apt install ./naughty_*_amd64.deb
 ```
 
 The package installs into `/opt/naughty` and adds the `naughty` command, a launcher in the app
-grid and the spacebar previewer. It does not change the system Files app. It replaces
-`gnome-sushi`, if you have it, because both provide the same previewer service.
+grid and the spacebar previewer. It does not change the system Files app. The previewer has
+its own name, so it can stay installed next to `gnome-sushi`, the previewer of the system Files
+app. Version 50.5-naughty1 removed `gnome-sushi`; if you installed that version, install it
+again with `sudo apt install gnome-sushi`.
 
 Naughty now appears in your app grid, and `man naughty` lists its options. Open it, select a
 PDF and press <kbd>Space</kbd>.
@@ -182,7 +184,7 @@ chmod +x "$P/bin/naughty"
 mkdir -p ~/.local/share/applications ~/.local/share/icons/hicolor/scalable/apps ~/.local/share/dbus-1/services
 sed -e "s|^Exec=nautilus|Exec=$P/bin/naughty|" -e "s|^DBusActivatable=true|DBusActivatable=false|" "$P/share/applications/io.github.niccostantini.Naughty.desktop" > ~/.local/share/applications/io.github.niccostantini.Naughty.desktop
 ln -sf "$P/share/icons/hicolor/scalable/apps/io.github.niccostantini.Naughty.svg" ~/.local/share/icons/hicolor/scalable/apps/
-ln -sf "$P/share/dbus-1/services/org.gnome.NautilusPreviewer.service" ~/.local/share/dbus-1/services/
+ln -sf "$P/share/dbus-1/services/io.github.niccostantini.Naughty.Previewer.service" ~/.local/share/dbus-1/services/
 ```
 
 Naughty now appears in your app grid. Open it, select a PDF and press <kbd>Space</kbd>.
@@ -212,7 +214,6 @@ xdg-mime default org.gnome.Nautilus.desktop inode/directory
 sudo apt remove naughty
 ```
 
-If you had `gnome-sushi` before, install it again with `sudo apt install gnome-sushi`.
 Your preferences stay in dconf under `/io/github/niccostantini/Naughty/`.
 
 If you built from source:
@@ -220,7 +221,7 @@ If you built from source:
 ```bash
 xdg-mime default org.gnome.Nautilus.desktop inode/directory
 rm -rf ~/.local/opt/naughty
-rm -f ~/.local/share/applications/io.github.niccostantini.Naughty.desktop ~/.local/share/icons/hicolor/scalable/apps/io.github.niccostantini.Naughty.svg ~/.local/share/dbus-1/services/org.gnome.NautilusPreviewer.service
+rm -f ~/.local/share/applications/io.github.niccostantini.Naughty.desktop ~/.local/share/icons/hicolor/scalable/apps/io.github.niccostantini.Naughty.svg ~/.local/share/dbus-1/services/io.github.niccostantini.Naughty.Previewer.service
 ```
 
 Your system Files app was never changed, so it works as before.
@@ -230,8 +231,6 @@ Your system Files app was never changed, so it works as before.
 - **Bundled extensions off.** Nautilus' own image-properties extension is not built, because
   Ubuntu 26.04 lacks `gexiv2` 0.16. Extensions installed on the system for Files still load,
   including that one from Ubuntu's package, `nautilus-python` scripts and cloud-sync menus.
-- **Shared previewer.** The system Files app also uses Naughty's previewer, after you install
-  the package or after step 4 of the source build. The uninstall steps undo this.
 - **Preview pane on local files only.** Files in the Trash, in archives or on network shares
   show a thumbnail in the pane; the spacebar preview still shows them in full. Audio and video
   show a thumbnail too. Converted Office documents are kept in `~/.cache/naughty/previews`.

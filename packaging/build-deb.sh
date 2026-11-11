@@ -7,7 +7,9 @@
 #   /usr/bin/naughty                               wrapper
 #   /usr/share/applications/io.github.niccostantini.Naughty.desktop
 #   /usr/share/icons/hicolor/{scalable,symbolic}/apps/io.github.niccostantini.Naughty*.svg
-#   /usr/share/dbus-1/services/org.gnome.NautilusPreviewer.service
+#   /usr/share/applications/io.github.niccostantini.Naughty.Previewer.desktop
+#   /usr/share/icons/hicolor/scalable/apps/io.github.niccostantini.Naughty.Previewer.svg
+#   /usr/share/dbus-1/services/io.github.niccostantini.Naughty.Previewer.service
 #   /usr/share/doc/naughty/
 #   /usr/share/man/man1/naughty.1.gz
 #
@@ -15,14 +17,14 @@
 # Env:   WORK=dir      build and staging folder (default: <repo>/build-deb)
 #        SUSHI_SRC=dir naughty-sushi checkout (default: <repo>/subprojects/sushi,
 #                      cloned from GitHub when missing)
-#        DEB_REV=...   Debian revision (default: naughty1)
+#        DEB_REV=...   Debian revision (default: naughty2)
 set -eu
 
 REPO=$(cd "$(dirname "$0")/.." && pwd)
 WORK=${WORK:-$REPO/build-deb}
 SUSHI_SRC=${SUSHI_SRC:-$REPO/subprojects/sushi}
 SUSHI_URL=https://github.com/niccostantini/naughty-sushi.git
-DEB_REV=${DEB_REV:-naughty1}
+DEB_REV=${DEB_REV:-naughty2}
 PREFIX=/opt/naughty
 APP_ID=io.github.niccostantini.Naughty
 
@@ -102,12 +104,13 @@ sed -e 's/^\.TH Nautilus /.TH Naughty /' \
     -e 's|^https://gitlab.gnome.org/GNOME/nautilus/issues$|https://github.com/niccostantini/naughty/issues|' \
     "$REPO/docs/nautilus.1" | gzip -9n > "$DEST/usr/share/man/man1/naughty.1.gz"
 
-# The previewer's launcher and icon, as gnome-sushi installs them, so the
-# desktop can name its window.
-sed 's|^Exec=sushi |Exec=/opt/naughty/bin/sushi |' "$O/share/applications/org.gnome.NautilusPreviewer.desktop" \
-    > "$DEST/usr/share/applications/org.gnome.NautilusPreviewer.desktop"
-rm "$O/share/applications/org.gnome.NautilusPreviewer.desktop"
-mv "$O/share/icons/hicolor/scalable/apps/org.gnome.NautilusPreviewer.svg" "$DEST/usr/share/icons/hicolor/scalable/apps/"
+# The previewer's launcher and icon, so the desktop can name its window.
+# Its own name (not gnome-sushi's) lets both packages be installed together.
+PV=$APP_ID.Previewer
+sed 's|^Exec=sushi |Exec=/opt/naughty/bin/sushi |' "$O/share/applications/$PV.desktop" \
+    > "$DEST/usr/share/applications/$PV.desktop"
+rm "$O/share/applications/$PV.desktop"
+mv "$O/share/icons/hicolor/scalable/apps/$PV.svg" "$DEST/usr/share/icons/hicolor/scalable/apps/"
 
 # The launcher moves to /usr so the desktop sees it; it starts the wrapper
 # directly because D-Bus activation would skip the environment above.
@@ -120,12 +123,10 @@ grep -q '^DBusActivatable=false' "$DEST/usr/share/applications/$APP_ID.desktop"
 mv "$O/share/icons/hicolor/scalable/apps/$APP_ID.svg" "$DEST/usr/share/icons/hicolor/scalable/apps/"
 mv "$O/share/icons/hicolor/symbolic/apps/$APP_ID-symbolic.svg" "$DEST/usr/share/icons/hicolor/symbolic/apps/"
 
-# Same bus name as gnome-sushi: the system Files app and Desktop Icons NG
-# use it too, so they get Naughty's previewer.
-cat > "$DEST/usr/share/dbus-1/services/org.gnome.NautilusPreviewer.service" <<EOF
+cat > "$DEST/usr/share/dbus-1/services/$PV.service" <<EOF
 [D-BUS Service]
-Name=org.gnome.NautilusPreviewer
-Exec=$PREFIX/libexec/org.gnome.NautilusPreviewer
+Name=$PV
+Exec=$PREFIX/libexec/$PV
 EOF
 
 find "$O" -type d -empty -delete
@@ -139,7 +140,7 @@ naughty: dir-or-file-in-opt [opt/naughty/*]
 naughty: custom-library-search-path RUNPATH $PREFIX/lib/$LIBDIR/sushi [opt/naughty/lib/$LIBDIR/sushi/web-process-extensions/libsushiwebprocessextension.so]
 # Sushi's own launchers start with "#!/usr/bin/env -S gjs -m"; coreutils env supports -S.
 naughty: unusual-interpreter -S [opt/naughty/bin/sushi]
-naughty: unusual-interpreter -S [opt/naughty/libexec/org.gnome.NautilusPreviewer]
+naughty: unusual-interpreter -S [opt/naughty/libexec/$PV]
 EOF
 
 {
@@ -194,9 +195,6 @@ Installed-Size: $(du -sk --exclude=DEBIAN "$DEST" | cut -f1)
 Depends: $SHLIBS, $GIR, gsettings-desktop-schemas, gvfs, shared-mime-info
 Recommends: gvfs-backends, localsearch, librsvg2-common, xdg-desktop-portal-gnome
 Suggests: libreoffice-core
-Conflicts: gnome-sushi
-Replaces: gnome-sushi
-Provides: gnome-sushi
 Section: gnome
 Priority: optional
 Homepage: https://github.com/niccostantini/naughty
@@ -206,8 +204,8 @@ Description: file manager forked from GNOME Files, with split view and previews
  installs in /opt/naughty, beside the system Files app, and starts with the
  "naughty" command.
  .
- It includes naughty-sushi, a patched GNOME Sushi previewer. It replaces
- gnome-sushi: the spacebar preview of the system Files app uses it too.
+ It includes naughty-sushi, a patched GNOME Sushi previewer with its own
+ D-Bus name, so gnome-sushi can stay installed for the system Files app.
  .
  Previews of Office documents need LibreOffice or the OnlyOffice Desktop
  Editors snap. PDF previews work without either.
