@@ -182,6 +182,9 @@ nautilus_preferences_dialog_setup (GtkBuilder *builder)
                        "type_ahead_row",
                        NAUTILUS_PREFERENCES_TYPE_AHEAD_SEARCH);
     bind_builder_bool (builder, nautilus_preferences,
+                       "click_to_rename_row",
+                       NAUTILUS_PREFERENCES_CLICK_TO_RENAME);
+    bind_builder_bool (builder, nautilus_preferences,
                        "queue_transfers_row",
                        NAUTILUS_PREFERENCES_QUEUE_FILE_TRANSFERS);
     bind_builder_bool (builder, nautilus_preferences,

@@ -55,6 +55,11 @@ struct _NautilusListBasePrivate
     gboolean activate_on_release;
     gboolean deny_background_click;
 
+    /* Click-to-rename: item whose name was clicked while it was the only
+     * selected one, and the delay before its rename starts. */
+    NautilusViewItem *rename_item;
+    guint rename_timeout_id;
+
     GdkDragAction drag_item_action;
     GdkDragAction drag_view_action;
     graphene_point_t hover_start_point;
@@ -239,6 +244,87 @@ nautilus_list_base_add_overlay (NautilusListBase *self,
 }
 
 static void
+cancel_click_to_rename (NautilusListBase *self)
+{
+    NautilusListBasePrivate *priv = nautilus_list_base_get_instance_private (self);
+
+    g_clear_object (&priv->rename_item);
+    g_clear_handle_id (&priv->rename_timeout_id, g_source_remove);
+}
+
+static gboolean
+on_key_pressed_cancel_rename (GtkEventControllerKey *controller,
+                              guint                  keyval,
+                              guint                  keycode,
+                              GdkModifierType        state,
+                              gpointer               user_data)
+{
+    cancel_click_to_rename (NAUTILUS_LIST_BASE (user_data));
+
+    return GDK_EVENT_PROPAGATE;
+}
+
+static gboolean
+is_only_selected_item (NautilusListBase *self,
+                       NautilusViewItem *item)
+{
+    NautilusListBasePrivate *priv = nautilus_list_base_get_instance_private (self);
+    g_autoptr (GtkBitset) selection = NULL;
+    g_autoptr (NautilusViewItem) selected_item = NULL;
+
+    if (priv->model == NULL || item == NULL)
+    {
+        return FALSE;
+    }
+
+    selection = gtk_selection_model_get_selection (GTK_SELECTION_MODEL (priv->model));
+    if (gtk_bitset_get_size (selection) != 1)
+    {
+        return FALSE;
+    }
+
+    selected_item = get_view_item (G_LIST_MODEL (priv->model),
+                                   gtk_bitset_get_nth (selection, 0));
+
+    return selected_item == item;
+}
+
+static void
+on_click_to_rename_timeout (gpointer user_data)
+{
+    NautilusListBase *self = user_data;
+    NautilusListBasePrivate *priv = nautilus_list_base_get_instance_private (self);
+    gboolean still_selected;
+
+    priv->rename_timeout_id = 0;
+    still_selected = is_only_selected_item (self, priv->rename_item);
+    g_clear_object (&priv->rename_item);
+
+    if (still_selected)
+    {
+        gtk_widget_activate_action (GTK_WIDGET (self), "view.rename", NULL);
+    }
+}
+
+static gboolean
+is_click_on_name (NautilusViewCell *cell,
+                  gdouble           x,
+                  gdouble           y)
+{
+    GtkWidget *widget = gtk_widget_pick (GTK_WIDGET (cell), x, y, GTK_PICK_DEFAULT);
+
+    for (; widget != NULL && widget != GTK_WIDGET (cell); widget = gtk_widget_get_parent (widget))
+    {
+        if (gtk_widget_has_css_class (widget, "click-to-rename-target"))
+        {
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+static void
 on_item_click_pressed (GtkGestureClick *gesture,
                        gint             n_press,
                        gdouble          x,
@@ -266,6 +352,24 @@ on_item_click_pressed (GtkGestureClick *gesture,
                                  button == GDK_BUTTON_PRIMARY &&
                                  n_press == 1 &&
                                  !selection_mode);
+
+    /* Any new press cancels a pending rename, including the second press of
+     * a double click. Remember the item only if it was already the only
+     * selected one, before this press changes the selection. */
+    cancel_click_to_rename (self);
+    if (!priv->single_click_mode &&
+        button == GDK_BUTTON_PRIMARY &&
+        n_press == 1 &&
+        !selection_mode &&
+        g_settings_get_boolean (nautilus_preferences, NAUTILUS_PREFERENCES_CLICK_TO_RENAME))
+    {
+        g_autoptr (NautilusViewItem) item = nautilus_view_cell_get_item (cell);
+
+        if (is_only_selected_item (self, item) && is_click_on_name (cell, x, y))
+        {
+            priv->rename_item = g_steal_pointer (&item);
+        }
+    }
 
     rubberband_set_state (self, FALSE);
 
@@ -324,6 +428,26 @@ on_item_click_released (GtkGestureClick *gesture,
         nautilus_list_base_activate_selection (self, FALSE);
     }
 
+    if (priv->rename_item != NULL)
+    {
+        if (n_press == 1 && is_click_on_name (cell, x, y))
+        {
+            gint double_click_time;
+
+            /* Wait past the double click time, so a double click opens. */
+            g_object_get (gtk_widget_get_settings (GTK_WIDGET (self)),
+                          "gtk-double-click-time", &double_click_time,
+                          NULL);
+            priv->rename_timeout_id = g_timeout_add_once (double_click_time + 200,
+                                                          on_click_to_rename_timeout,
+                                                          self);
+        }
+        else
+        {
+            cancel_click_to_rename (self);
+        }
+    }
+
     rubberband_set_state (self, TRUE);
     priv->activate_on_release = FALSE;
     priv->deny_background_click = FALSE;
@@ -340,6 +464,13 @@ on_item_click_stopped (GtkGestureClick *gesture,
     g_return_if_fail (self != NULL);
 
     NautilusListBasePrivate *priv = nautilus_list_base_get_instance_private (self);
+
+    /* "stopped" also follows a normal release; only a press that never
+     * released (e.g. turned into a drag) leaves a candidate without timer. */
+    if (priv->rename_timeout_id == 0)
+    {
+        g_clear_object (&priv->rename_item);
+    }
 
     rubberband_set_state (self, TRUE);
     priv->activate_on_release = FALSE;
@@ -426,6 +557,8 @@ on_item_drag_prepare (GtkDragSource *source,
     gint scale_factor;
     GtkBitsetIter iter;
     guint i;
+
+    cancel_click_to_rename (self);
 
     if (priv->dnd_disabled)
     {
@@ -961,6 +1094,8 @@ base_setup_directory (NautilusListBase  *self,
      * because the new view interrupts the gesture sequence, so lets reset it.*/
     priv->deny_background_click = FALSE;
 
+    cancel_click_to_rename (self);
+
     /* When DnD is used to navigate between directories, the normal callbacks
      * are ignored. Update DnD variables here upon navigating to a directory*/
     if (gtk_drop_target_get_current_drop (priv->view_drop_target) != NULL)
@@ -1085,6 +1220,7 @@ nautilus_list_base_dispose (GObject *object)
     g_clear_object (&priv->model);
     g_clear_handle_id (&priv->hover_timer_id, g_source_remove);
     g_clear_handle_id (&priv->scroll_timeout_id, g_source_remove);
+    cancel_click_to_rename (self);
 
     G_OBJECT_CLASS (nautilus_list_base_parent_class)->dispose (object);
 }
@@ -1340,6 +1476,16 @@ nautilus_list_base_init (NautilusListBase *self)
     gtk_widget_add_controller (priv->scrolled_window, controller);
     gtk_event_controller_set_propagation_phase (controller, GTK_PHASE_CAPTURE);
     g_signal_connect (controller, "scroll", G_CALLBACK (on_scroll), self);
+
+    /* Scrolling or typing cancels a pending click-to-rename. */
+    g_signal_connect_object (gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (priv->scrolled_window)),
+                             "value-changed",
+                             G_CALLBACK (cancel_click_to_rename), self,
+                             G_CONNECT_SWAPPED);
+    controller = gtk_event_controller_key_new ();
+    gtk_widget_add_controller (GTK_WIDGET (self), controller);
+    gtk_event_controller_set_propagation_phase (controller, GTK_PHASE_CAPTURE);
+    g_signal_connect (controller, "key-pressed", G_CALLBACK (on_key_pressed_cancel_rename), self);
 
     g_signal_connect_object (nautilus_preferences,
                              "changed::" NAUTILUS_PREFERENCES_CLICK_POLICY,

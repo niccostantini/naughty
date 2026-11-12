@@ -178,6 +178,11 @@
       <summary>Jump to files while typing</summary>
       <description>If true, typing in a folder selects the first item whose name starts with the typed text. If false, typing starts a search.</description>
     </key>
+    <key type="b" name="click-to-rename">
+      <default>true</default>
+      <summary>Rename with a click on the name</summary>
+      <description>If true, clicking the name of the only selected item and waiting briefly starts renaming it. Has no effect when items open with a single click.</description>
+    </key>
     <key type="b" name="queue-file-transfers">
       <default>true</default>
       <summary>Copy one batch at a time</summary>

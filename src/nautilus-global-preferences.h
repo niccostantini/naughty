@@ -42,6 +42,9 @@ G_BEGIN_DECLS
 /* Typing selects the first matching item instead of starting a search */
 #define NAUTILUS_PREFERENCES_TYPE_AHEAD_SEARCH "type-ahead-search"
 
+/* A slow second click on the name of the only selected item renames it */
+#define NAUTILUS_PREFERENCES_CLICK_TO_RENAME "click-to-rename"
+
 /* Copies wait for each other instead of running in parallel */
 #define NAUTILUS_PREFERENCES_QUEUE_FILE_TRANSFERS "queue-file-transfers"
 

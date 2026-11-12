@@ -6584,6 +6584,14 @@ msgid "Typing selects the first matching name instead of searching"
 msgstr "Digitando si seleziona il primo nome corrispondente invece di cercare"
 
 #: src/resources/ui/nautilus-preferences-dialog.blp
+msgid "Click Name to _Rename"
+msgstr "Clic sul nome per _rinominare"
+
+#: src/resources/ui/nautilus-preferences-dialog.blp
+msgid "Clicking the name of a selected item, then waiting, renames it"
+msgstr "Facendo clic sul nome di un elemento selezionato e attendendo, lo si rinomina"
+
+#: src/resources/ui/nautilus-preferences-dialog.blp
 msgid "_Queue File Transfers"
 msgstr "_Copie in coda"
 

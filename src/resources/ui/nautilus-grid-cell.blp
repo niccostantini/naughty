@@ -35,6 +35,10 @@ template $NautilusGridCell: $NautilusViewCell {
       wrap-mode: word_char;
       attributes: "0 -1 insert-hyphens false";
       query-tooltip => $on_label_query_tooltip();
+
+      styles [
+        "click-to-rename-target",
+      ]
       label: bind template.item as <$NautilusViewItem>.file as <$NautilusFile>.display-name;
     }
 

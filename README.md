@@ -70,6 +70,12 @@ Type the first letters of a name and Naughty selects the file, as in Finder and 
 Explorer. Nautilus starts a search instead. <kbd>Ctrl</kbd>+<kbd>F</kbd> still searches, and a
 switch in Preferences restores the old behaviour.
 
+### Click a name to rename
+
+Click the name of a selected file, wait a moment, and the rename box opens, as in Finder.
+A double click still opens the file, and a click on the icon or a drag never renames.
+The feature is off when items open with a single click. A switch in Preferences turns it off.
+
 ### A copy queue you can pause
 
 Copies run one after another instead of all at once, so they do not slow each other down.
@@ -88,6 +94,7 @@ A neon icon and its own name, so you never mix it up with the system Files.
 | <kbd>Alt</kbd>+<kbd>P</kbd> | Show or hide the preview pane |
 | <kbd>Space</kbd> | Spacebar preview of the selected file |
 | *Type a name* | Jump to the first file that starts with it |
+| *Click the name of the selected file* | Rename it after a short wait |
 | <kbd>Ctrl</kbd>+<kbd>F</kbd> | Search |
 | <kbd>Ctrl</kbd>+<kbd>W</kbd> | Close the second pane of the split view |
 
