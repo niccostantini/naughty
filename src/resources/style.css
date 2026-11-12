@@ -156,6 +156,17 @@
     color: var(--warning-fg-color);
 }
 
+/* Name being edited in place (see nautilus-inline-rename.c) */
+.inline-rename-editor {
+  border-radius: 6px;
+  padding: 1px 3px;
+  outline: 2px solid var(--accent-color);
+  outline-offset: -2px;
+}
+.inline-rename-editor.error {
+  outline-color: var(--error-color);
+}
+
 /* Grid view */
 .nautilus-grid-view gridview {
   padding: 18px;

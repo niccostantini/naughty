@@ -128,6 +128,8 @@ libnautilus_sources = [
   'nautilus-history-controls.h',
   'nautilus-icon-info.c',
   'nautilus-icon-info.h',
+  'nautilus-inline-rename.c',
+  'nautilus-inline-rename.h',
   'nautilus-icon-names.h',
   'nautilus-image.c',
   'nautilus-image.h',

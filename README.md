@@ -72,9 +72,19 @@ switch in Preferences restores the old behaviour.
 
 ### Click a name to rename
 
-Click the name of a selected file, wait a moment, and the rename box opens, as in Finder.
+Click the name of a selected file, wait a moment, and you can rename it, as in Finder.
 A double click still opens the file, and a click on the icon or a drag never renames.
 The feature is off when items open with a single click. A switch in Preferences turns it off.
+
+### Rename in place
+
+<kbd>F2</kbd> or a click on the name turns the name under the icon into a text field,
+with the name before the extension selected. Long names wrap over several lines.
+<kbd>Enter</kbd> renames, <kbd>Esc</kbd> keeps the old name. Clicking elsewhere, or
+scrolling the name out of sight, renames too; an invalid name is then dropped.
+Problems with the name, such as a file that already exists, show up below the field.
+Several selected files still open the batch rename dialog. A switch in Preferences
+brings back the rename popup.
 
 ### A copy queue you can pause
 

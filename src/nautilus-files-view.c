@@ -56,6 +56,7 @@
 #include "nautilus-grid-view.h"
 #include "nautilus-grid-view-captions-dialog.h"
 #include "nautilus-icon-info.h"
+#include "nautilus-inline-rename.h"
 #include "nautilus-list-view.h"
 #include "nautilus-metadata.h"
 #include "nautilus-mime-actions.h"
@@ -160,6 +161,7 @@ struct _NautilusFilesView
     NautilusDirectory *outgoing_search;
 
     GtkWidget *rename_file_popover;
+    NautilusInlineRename *inline_rename;
 
     GList *scripts_directory_list;
     GList *templates_directory_list;
@@ -1760,6 +1762,22 @@ action_invert_selection (GSimpleAction *action,
     nautilus_files_view_invert_selection (user_data);
 }
 
+static gboolean
+preview_selection_shortcut_cb (GtkWidget *widget,
+                               GVariant  *args,
+                               gpointer   user_data)
+{
+    NautilusFilesView *self = NAUTILUS_FILES_VIEW (widget);
+
+    /* Let the name being edited in place get its space. */
+    if (nautilus_inline_rename_is_active (self->inline_rename))
+    {
+        return FALSE;
+    }
+
+    return gtk_widget_activate_action (widget, "view.preview-selection", NULL);
+}
+
 static void
 action_preview_selection (GSimpleAction *action,
                           GVariant      *state,
@@ -3269,6 +3287,7 @@ nautilus_files_view_dispose (GObject *object)
     g_clear_pointer (&self->selection_menu, gtk_widget_unparent);
     g_clear_pointer (&self->background_menu, gtk_widget_unparent);
     g_clear_pointer (&self->rename_file_popover, gtk_widget_unparent);
+    g_clear_object (&self->inline_rename);
 
     if (self->directory)
     {
@@ -5994,7 +6013,16 @@ real_action_rename (NautilusFilesView *view)
         {
             file = NAUTILUS_FILE (selection->data);
 
-            nautilus_files_view_rename_file_popover_new (view, file);
+            /* Edit the name in its cell, unless off or the cell is not shown */
+            if (!g_settings_get_boolean (nautilus_preferences, NAUTILUS_PREFERENCES_INLINE_RENAME) ||
+                !nautilus_inline_rename_start (view->inline_rename,
+                                               nautilus_list_base_get_selected_item_ui (view->list_base),
+                                               file,
+                                               rename_file_popover_callback,
+                                               view))
+            {
+                nautilus_files_view_rename_file_popover_new (view, file);
+            }
         }
     }
 }
@@ -9616,7 +9644,7 @@ nautilus_files_view_init (NautilusFilesView *self)
      * capture phase instead, to trigger it first (keybindings use bubble phase).
      */
     shortcut = gtk_shortcut_new (gtk_keyval_trigger_new (GDK_KEY_space, 0),
-                                 gtk_named_action_new ("view.preview-selection"));
+                                 gtk_callback_action_new (preview_selection_shortcut_cb, NULL, NULL));
 
     controller = gtk_shortcut_controller_new ();
     gtk_widget_add_controller (GTK_WIDGET (self), controller);
@@ -9629,6 +9657,7 @@ nautilus_files_view_init (NautilusFilesView *self)
 
     self->rename_file_popover = nautilus_rename_file_popover_new ();
     gtk_widget_set_parent (self->rename_file_popover, GTK_WIDGET (self));
+    self->inline_rename = nautilus_inline_rename_new ();
 }
 
 static void

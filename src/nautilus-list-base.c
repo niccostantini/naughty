@@ -307,21 +307,40 @@ on_click_to_rename_timeout (gpointer user_data)
 }
 
 static gboolean
-is_click_on_name (NautilusViewCell *cell,
-                  gdouble           x,
-                  gdouble           y)
+is_click_on_class (NautilusViewCell *cell,
+                   gdouble           x,
+                   gdouble           y,
+                   const char       *css_class)
 {
     GtkWidget *widget = gtk_widget_pick (GTK_WIDGET (cell), x, y, GTK_PICK_DEFAULT);
 
     for (; widget != NULL && widget != GTK_WIDGET (cell); widget = gtk_widget_get_parent (widget))
     {
-        if (gtk_widget_has_css_class (widget, "click-to-rename-target"))
+        if (gtk_widget_has_css_class (widget, css_class))
         {
             return TRUE;
         }
     }
 
     return FALSE;
+}
+
+static gboolean
+is_click_on_name (NautilusViewCell *cell,
+                  gdouble           x,
+                  gdouble           y)
+{
+    return is_click_on_class (cell, x, y, "click-to-rename-target");
+}
+
+/* The name being edited in place (nautilus-inline-rename.c) keeps its clicks
+ * and drags for the text, instead of selecting, opening or dragging files. */
+static gboolean
+is_click_on_inline_rename (NautilusViewCell *cell,
+                           gdouble           x,
+                           gdouble           y)
+{
+    return is_click_on_class (cell, x, y, "inline-rename");
 }
 
 static void
@@ -352,6 +371,12 @@ on_item_click_pressed (GtkGestureClick *gesture,
                                  button == GDK_BUTTON_PRIMARY &&
                                  n_press == 1 &&
                                  !selection_mode);
+
+    if (is_click_on_inline_rename (cell, x, y))
+    {
+        priv->activate_on_release = FALSE;
+        return;
+    }
 
     /* Any new press cancels a pending rename, including the second press of
      * a double click. Remember the item only if it was already the only
@@ -542,9 +567,9 @@ on_item_drag_prepare (GtkDragSource *source,
     NautilusViewCell *cell = user_data;
     NautilusListBase *self = nautilus_view_cell_get_view (cell);
 
-    if (self == NULL)
+    if (self == NULL || is_click_on_inline_rename (cell, x, y))
     {
-        /* Not bound to a listbase. */
+        /* Not bound to a listbase, or selecting text in the name editor. */
         return NULL;
     }
 

@@ -183,6 +183,11 @@
       <summary>Rename with a click on the name</summary>
       <description>If true, clicking the name of the only selected item and waiting briefly starts renaming it. Has no effect when items open with a single click.</description>
     </key>
+    <key type="b" name="inline-rename">
+      <default>true</default>
+      <summary>Rename in place</summary>
+      <description>If true, renaming a single item edits its name directly in the view. If false, a popover with a text field is used.</description>
+    </key>
     <key type="b" name="queue-file-transfers">
       <default>true</default>
       <summary>Copy one batch at a time</summary>

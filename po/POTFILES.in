@@ -40,6 +40,7 @@ src/nautilus-floating-bar.c
 src/nautilus-global-preferences.c
 src/nautilus-grid-view.c
 src/nautilus-grid-view-captions-dialog.c
+src/nautilus-inline-rename.c
 src/nautilus-internal-place-file.c
 src/nautilus-list-view.c
 src/nautilus-location-banner.c

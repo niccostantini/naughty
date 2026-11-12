@@ -6592,6 +6592,14 @@ msgid "Clicking the name of a selected item, then waiting, renames it"
 msgstr "Facendo clic sul nome di un elemento selezionato e attendendo, lo si rinomina"
 
 #: src/resources/ui/nautilus-preferences-dialog.blp
+msgid "Rename _in Place"
+msgstr "Ri_nomina sul posto"
+
+#: src/resources/ui/nautilus-preferences-dialog.blp
+msgid "Edit the name directly under the icon instead of in a popup"
+msgstr "Modifica il nome direttamente sotto l'icona invece che in un riquadro"
+
+#: src/resources/ui/nautilus-preferences-dialog.blp
 msgid "_Queue File Transfers"
 msgstr "_Copie in coda"
 

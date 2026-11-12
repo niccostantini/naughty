@@ -45,6 +45,9 @@ G_BEGIN_DECLS
 /* A slow second click on the name of the only selected item renames it */
 #define NAUTILUS_PREFERENCES_CLICK_TO_RENAME "click-to-rename"
 
+/* Renaming edits the name in its place in the view, not in a popover */
+#define NAUTILUS_PREFERENCES_INLINE_RENAME "inline-rename"
+
 /* Copies wait for each other instead of running in parallel */
 #define NAUTILUS_PREFERENCES_QUEUE_FILE_TRANSFERS "queue-file-transfers"
 
